@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMEN — Persuasion that performs. Claims that hold up.</title>
+<meta name="description" content="LUMEN is a medical-authority copy studio for health, supplement, and longevity brands. Conversion copy that survives FTC and Meta review.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E0E0E;
+  --carbon:#151413;
+  --bone:#E8E2D6;
+  --bone-55:rgba(232,226,214,.55);
+  --bone-30:rgba(232,226,214,.30);
+  --bone-12:rgba(232,226,214,.12);
+  --ox:#7A2E2E;
+  --ox-bright:#A03A3A;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Archivo',Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+html.lenis{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto}
+body{
+  background:var(--ink);
+  color:var(--bone);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--ox);color:var(--bone)}
+
+/* ---------- cursor ---------- */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
+  border-radius:50%;transform:translate(-50%,-50%);
+}
+.cursor-dot{width:6px;height:6px;background:var(--bone)}
+.cursor-ring{
+  width:34px;height:34px;border:1px solid var(--bone-30);
+  transition:width .35s var(--ease),height .35s var(--ease),border-color .35s var(--ease),background .35s var(--ease);
+}
+.cursor-ring.is-active{width:64px;height:64px;border-color:var(--ox-bright);background:rgba(122,46,46,.08)}
+@media (hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:28px clamp(24px,5vw,64px);
+  mix-blend-mode:difference;
+}
+.wordmark{
+  font-family:var(--sans);font-weight:600;font-size:15px;letter-spacing:.42em;
+  color:var(--bone);text-decoration:none;
+}
+.nav-cta{
+  font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--bone);text-decoration:none;padding-bottom:4px;
+  border-bottom:1px solid var(--bone-30);
+  transition:border-color .3s;
+}
+.nav-cta:hover{border-color:var(--bone)}
+
+/* ---------- shared ---------- */
+section{position:relative;padding:clamp(110px,16vh,180px) clamp(24px,6vw,80px)}
+.shell{max-width:1240px;margin:0 auto}
+.eyebrow{
+  display:flex;align-items:center;gap:14px;
+  font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--bone-55);
+  margin-bottom:clamp(28px,4vh,44px);
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--ox-bright)}
+h1,h2,.display{font-family:var(--serif);font-weight:600;line-height:1.02;letter-spacing:-.01em}
+.body-copy{color:var(--bone-55);max-width:560px;font-size:clamp(15px,1.2vw,17px)}
+
+/* reveal */
+[data-reveal]{opacity:0;transform:translateY(36px);transition:opacity 1s var(--ease),transform 1.1s var(--ease)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* ECG divider */
+.ecg{display:block;width:min(720px,82vw);margin:0 auto;overflow:visible}
+.ecg path{
+  fill:none;stroke:var(--ox-bright);stroke-width:1.5;opacity:.85;
+  stroke-dasharray:1200;stroke-dashoffset:1200;
+  transition:stroke-dashoffset 2.4s var(--ease);
+}
+.ecg.in path{stroke-dashoffset:0}
+
+/* ---------- hero ---------- */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding-top:120px;
+}
+#helix{position:absolute;inset:0;z-index:0}
+.hero::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 90% 70% at 50% 45%,transparent 30%,var(--ink) 100%);
+}
+.hero .shell{position:relative;z-index:2}
+.hero h1{
+  font-size:clamp(52px,8.4vw,124px);
+  max-width:14ch;
+}
+.hero h1 .w{display:inline-block;overflow:hidden;vertical-align:bottom}
+.hero h1 .w span{
+  display:inline-block;transform:translateY(110%);
+  transition:transform 1.1s var(--ease);
+}
+.hero.loaded h1 .w span{transform:none}
+.hero h1 em{font-style:italic;color:var(--ox-bright);-webkit-text-stroke:0}
+.hero-sub{
+  margin-top:clamp(26px,3.4vh,40px);
+  color:var(--bone-55);max-width:46ch;font-size:clamp(15px,1.25vw,18px);
+  opacity:0;transform:translateY(20px);
+  transition:opacity 1s var(--ease) .9s,transform 1s var(--ease) .9s;
+}
+.hero.loaded .hero-sub{opacity:1;transform:none}
+.hero-cta-row{
+  margin-top:clamp(38px,5vh,56px);display:flex;align-items:center;gap:36px;
+  opacity:0;transition:opacity 1s var(--ease) 1.25s;
+}
+.hero.loaded .hero-cta-row{opacity:1}
+.scroll-cue{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:2;
+  font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--bone-30);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.scroll-cue::after{
+  content:"";width:1px;height:44px;background:linear-gradient(var(--bone-30),transparent);
+  animation:cue 2.4s var(--ease) infinite;
+}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* magnetic button */
+.btn{
+  position:relative;display:inline-flex;align-items:center;gap:14px;
+  font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--bone);text-decoration:none;
+  border:1px solid var(--bone-30);border-radius:999px;
+  padding:20px 38px;overflow:hidden;
+  transition:border-color .4s var(--ease),color .4s var(--ease);
+  will-change:transform;
+}
+.btn::before{
+  content:"";position:absolute;inset:0;background:var(--ox);border-radius:inherit;
+  transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease);z-index:-1;
+}
+.btn:hover{border-color:var(--ox)}
+.btn:hover::before{transform:scaleX(1)}
+.btn .arrow{transition:transform .4s var(--ease)}
+.btn:hover .arrow{transform:translateX(6px)}
+.ghost-link{
+  font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-55);
+  text-decoration:none;border-bottom:1px solid transparent;transition:color .3s,border-color .3s;
+}
+.ghost-link:hover{color:var(--bone);border-color:var(--bone-30)}
+
+/* ---------- problem ---------- */
+.problem h2{font-size:clamp(38px,5.4vw,76px);max-width:18ch;margin-bottom:clamp(54px,8vh,90px)}
+.split{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px);
+  border-top:1px solid var(--bone-12);padding-top:clamp(40px,6vh,64px);
+}
+.split .col h3{
+  font-family:var(--serif);font-style:italic;font-weight:500;
+  font-size:clamp(24px,2.6vw,34px);margin-bottom:18px;line-height:1.15;
+}
+.split .col:first-child h3{color:var(--ox-bright)}
+.split .col p{color:var(--bone-55);font-size:15px;max-width:42ch}
+.thesis{
+  margin-top:clamp(64px,10vh,110px);
+  font-family:var(--serif);font-size:clamp(26px,3.4vw,46px);font-weight:500;line-height:1.2;
+  max-width:24ch;
+}
+.thesis em{font-style:italic;color:var(--ox-bright)}
+
+/* ---------- services ---------- */
+.services-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2vw,28px);
+  margin-top:clamp(20px,3vh,30px);
+}
+.card{
+  position:relative;background:var(--carbon);
+  border:1px solid var(--bone-12);border-radius:6px;
+  padding:clamp(34px,3vw,48px) clamp(28px,2.4vw,40px);
+  transition:border-color .5s var(--ease);
+  transform-style:preserve-3d;will-change:transform;
+}
+.card:hover{border-color:rgba(160,58,58,.5)}
+.card .tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-30);margin-bottom:26px;display:block}
+.card h3{font-family:var(--serif);font-size:clamp(28px,2.4vw,36px);font-weight:600;margin-bottom:14px}
+.card .desc{color:var(--bone-55);font-size:14.5px;margin-bottom:30px;min-height:3.2em}
+.card ul{list-style:none}
+.card li{
+  font-size:13px;color:var(--bone-55);padding:11px 0;border-top:1px solid var(--bone-12);
+  display:flex;gap:12px;align-items:baseline;
+}
+.card li::before{content:"—";color:var(--ox-bright);flex-shrink:0}
+.card .from{
+  margin-top:30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-30);
+}
+.card .from strong{color:var(--bone);font-weight:500}
+.audit-line{
+  margin-top:clamp(44px,6vh,64px);text-align:center;color:var(--bone-55);font-size:14.5px;
+}
+.audit-line a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ox-bright)}
+
+/* ---------- edge ---------- */
+.edge{text-align:center}
+.edge .quote{
+  font-family:var(--serif);font-weight:600;
+  font-size:clamp(34px,5.6vw,84px);line-height:1.06;
+  max-width:18ch;margin:0 auto clamp(44px,7vh,72px);
+  will-change:transform;
+}
+.edge .quote em{font-style:italic;color:var(--ox-bright)}
+.edge .body-copy{margin:0 auto;text-align:center;max-width:54ch}
+.edge .body-copy + .body-copy{margin-top:22px}
+
+/* ---------- proof ---------- */
+.proof-frame{
+  margin-top:clamp(20px,3vh,30px);
+  border:1px solid var(--bone-12);border-radius:6px;background:var(--carbon);
+  padding:clamp(30px,4vw,56px);
+}
+.compare{position:relative;user-select:none}
+.compare .pane{padding:clamp(8px,1vw,12px) 0}
+.compare .label{
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-30);
+  display:block;margin-bottom:18px;
+}
+.compare .line{
+  font-family:var(--serif);font-weight:500;line-height:1.18;
+  font-size:clamp(22px,3vw,40px);max-width:26ch;
+}
+.pane-before .line{color:var(--bone-30);text-decoration:line-through;text-decoration-color:rgba(160,58,58,.6);text-decoration-thickness:1px}
+.pane-after{border-top:1px solid var(--bone-12);margin-top:clamp(26px,3.4vh,38px);padding-top:clamp(26px,3.4vh,38px)}
+.pane-after .label{color:var(--ox-bright)}
+.standards{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2vw,28px);
+  margin-top:clamp(44px,6vh,64px);
+}
+.standard{border-top:1px solid var(--bone-12);padding-top:22px}
+.standard .n{font-family:var(--serif);font-style:italic;color:var(--ox-bright);font-size:18px;display:block;margin-bottom:10px}
+.standard p{font-size:13.5px;color:var(--bone-55)}
+
+/* ---------- work ---------- */
+.work-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2vw,28px);
+  margin-top:clamp(20px,3vh,30px);
+}
+.work{
+  position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;
+  border:1px solid var(--bone-12);text-decoration:none;display:block;
+}
+.work .bg{
+  position:absolute;inset:0;transition:transform 1.1s var(--ease);
+}
+.work:hover .bg{transform:scale(1.06)}
+.w1 .bg{background:
+  radial-gradient(120% 110% at 15% 20%,rgba(122,46,46,.55),transparent 55%),
+  radial-gradient(90% 90% at 85% 85%,rgba(232,226,214,.10),transparent 60%),
+  linear-gradient(160deg,#1a1414,#0E0E0E)}
+.w2 .bg{background:
+  radial-gradient(120% 120% at 80% 15%,rgba(232,226,214,.14),transparent 55%),
+  radial-gradient(100% 100% at 15% 85%,rgba(122,46,46,.4),transparent 60%),
+  linear-gradient(200deg,#141416,#0E0E0E)}
+.w3 .bg{background:
+  radial-gradient(130% 110% at 50% 110%,rgba(122,46,46,.5),transparent 60%),
+  linear-gradient(180deg,#16120f,#0E0E0E)}
+.w4 .bg{background:
+  radial-gradient(100% 130% at 100% 50%,rgba(232,226,214,.12),transparent 55%),
+  radial-gradient(120% 110% at 0% 0%,rgba(122,46,46,.45),transparent 55%),
+  linear-gradient(140deg,#131315,#0E0E0E)}
+.work .meta{
+  position:absolute;left:0;right:0;bottom:0;padding:clamp(22px,2.4vw,34px);
+  display:flex;justify-content:space-between;align-items:flex-end;
+  background:linear-gradient(transparent,rgba(14,14,14,.85));
+}
+.work .name{
+  font-family:var(--serif);font-size:clamp(24px,2.4vw,34px);font-weight:600;color:var(--bone);
+  transform:translateY(8px);transition:transform .6s var(--ease);
+}
+.work:hover .name{transform:none}
+.work .kind{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--bone-55);
+  opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease) .08s,transform .6s var(--ease) .08s;
+  text-align:right;
+}
+.work:hover .kind{opacity:1;transform:none}
+.work-note{margin-top:26px;font-size:12.5px;color:var(--bone-30);letter-spacing:.04em}
+
+/* ---------- founder ---------- */
+.founder{text-align:center}
+.founder .line{
+  font-family:var(--serif);font-weight:500;font-style:italic;
+  font-size:clamp(30px,4.6vw,64px);line-height:1.12;max-width:20ch;margin:0 auto;
+}
+.founder .line strong{font-style:normal;font-weight:600;color:var(--ox-bright)}
+.founder .sub{margin-top:26px;color:var(--bone-30);font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+
+/* ---------- contact ---------- */
+.contact{text-align:center;padding-bottom:clamp(80px,12vh,140px)}
+.contact h2{font-size:clamp(44px,7vw,104px);margin-bottom:clamp(30px,4vh,44px)}
+.contact h2 em{font-style:italic;color:var(--ox-bright)}
+.contact .body-copy{margin:0 auto clamp(40px,5vh,56px)}
+.contact-email{
+  display:block;margin-top:30px;font-size:13px;letter-spacing:.14em;color:var(--bone-30);
+  text-decoration:none;transition:color .3s;
+}
+.contact-email:hover{color:var(--bone-55)}
+
+footer{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  padding:34px clamp(24px,6vw,80px);
+  border-top:1px solid var(--bone-12);
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-30);
+}
+
+/* ----------
+TESTIMONIALS — READY WHEN THE REAL ONES ARRIVE.
+Paste real client quotes into this block and move it above the founder section.
+Do not launch with invented quotes: this studio sells claim integrity.
+<section class="testimonials">
+  <div class="shell">
+    <div class="eyebrow" data-reveal>What founders say</div>
+    <blockquote class="t-quote" data-reveal>
+      <p>"REAL CLIENT QUOTE HERE."</p>
+      <cite>Name — Brand</cite>
+    </blockquote>
+  </div>
+</section>
+---------- */
+
+@media (max-width:880px){
+  .split,.services-grid,.standards{grid-template-columns:1fr}
+  .work-grid{grid-template-columns:1fr}
+  .split .col + .col{border-top:1px solid var(--bone-12);padding-top:34px}
+  section{padding-left:22px;padding-right:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  [data-reveal]{opacity:1;transform:none;transition:none}
+  .hero h1 .w span{transform:none;transition:none}
+  .hero-sub,.hero-cta-row{opacity:1;transform:none;transition:none}
+  .ecg path{stroke-dashoffset:0;transition:none}
+  .scroll-cue::after{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<nav>
+  <a class="wordmark" href="#top">LUMEN</a>
+  <a class="nav-cta" href="#contact">Start a project</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <canvas id="helix"></canvas>
+  <div class="shell">
+    <div class="eyebrow">A medical-authority copy studio</div>
+    <h1 id="heroline">Persuasion that performs. <em>Claims that hold up.</em></h1>
+    <p class="hero-sub">Conversion copy for health, supplement, and longevity brands — written by a medically trained mind, so it sells hard and survives FTC and Meta review.</p>
+    <div class="hero-cta-row">
+      <a class="btn magnetic" href="#contact">Start a project <span class="arrow">→</span></a>
+      <a class="ghost-link" href="#work">See the work</a>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</section>
+
+<svg class="ecg" data-ecg viewBox="0 0 720 60" aria-hidden="true">
+  <path d="M0,30 L210,30 L228,30 L238,12 L250,48 L262,6 L274,42 L284,30 L300,30 L720,30"/>
+</svg>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="shell">
+    <div class="eyebrow" data-reveal>The problem</div>
+    <h2 data-reveal>Every health brand is one sentence away from trouble.</h2>
+    <div class="split">
+      <div class="col" data-reveal>
+        <h3>The copy that converts gets you flagged.</h3>
+        <p>"Cures." "Reverses." "Clinically proven." The lines that move cold traffic are the same lines that burn ad accounts, invite FTC letters, and stall your scaling for weeks while review queues clear.</p>
+      </div>
+      <div class="col" data-reveal>
+        <h3>The copy that's safe gets ignored.</h3>
+        <p>So the lawyers sand it down to "supports overall wellness" — and now it offends no one and persuades no one. Your CAC climbs while your copy says nothing at all.</p>
+      </div>
+    </div>
+    <p class="thesis" data-reveal>There is a third way: copy written by someone who can <em>read the studies</em> — and knows exactly how far the evidence lets you go.</p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="shell">
+    <div class="eyebrow" data-reveal>Three ways to work together</div>
+    <div class="services-grid">
+      <div class="card tilt" data-reveal>
+        <span class="tag">01 / Email</span>
+        <h3>The Flow</h3>
+        <p class="desc">Welcome, cart, and post-purchase sequences that turn first orders into subscriptions.</p>
+        <ul>
+          <li>5–7 email sequence, mechanism-first</li>
+          <li>Subject-line variants for testing</li>
+          <li>Claims-checked against your evidence</li>
+        </ul>
+        <p class="from">From <strong>$500</strong></p>
+      </div>
+      <div class="card tilt" data-reveal>
+        <span class="tag">02 / Pages</span>
+        <h3>The Engine</h3>
+        <p class="desc">Sales pages and VSL scripts built to carry cold traffic from doubt to checkout.</p>
+        <ul>
+          <li>Full long-form page or VSL script</li>
+          <li>Research dossier on your buyer's objections</li>
+          <li>Compliance pass on every claim</li>
+        </ul>
+        <p class="from">From <strong>$1,000</strong></p>
+      </div>
+      <div class="card tilt" data-reveal>
+        <span class="tag">03 / Retainer</span>
+        <h3>The Standing Retainer</h3>
+        <p class="desc">A copy chief on call — monthly assets, testing roadmap, and a second brain on strategy.</p>
+        <ul>
+          <li>Monthly asset production</li>
+          <li>Ad-angle and offer consulting</li>
+          <li>Priority turnaround</li>
+        </ul>
+        <p class="from"><strong>$1,300</strong> / month</p>
+      </div>
+    </div>
+    <p class="audit-line" data-reveal>Not ready for a full build? Start with the <a href="#contact">Compliance &amp; Conversion Audit</a> — your funnel, marked up line by line, in 48 hours.</p>
+  </div>
+</section>
+
+<svg class="ecg" data-ecg viewBox="0 0 720 60" aria-hidden="true">
+  <path d="M0,30 L210,30 L228,30 L238,12 L250,48 L262,6 L274,42 L284,30 L300,30 L720,30"/>
+</svg>
+
+<!-- EDGE -->
+<section class="edge">
+  <div class="shell">
+    <div class="eyebrow" style="justify-content:center" data-reveal>The edge</div>
+    <p class="quote" data-parallax data-reveal>The difference between <em>"clinically&nbsp;proven"</em> and <em>"clinically&nbsp;studied"</em> is a lawsuit.</p>
+    <p class="body-copy" data-reveal>Most copywriters borrow your science secondhand. LUMEN reads the primary literature — the actual trials, doses, and endpoints — and writes mechanism-first copy that makes skeptical buyers lean in.</p>
+    <p class="body-copy" data-reveal>That is the whole edge: persuasion built on what the evidence actually says. It converts harder <em>because</em> it holds up.</p>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section>
+  <div class="shell">
+    <div class="eyebrow" data-reveal>Proof, on the page</div>
+    <div class="proof-frame" data-reveal>
+      <div class="compare">
+        <div class="pane pane-before">
+          <span class="label">What the category writes</span>
+          <p class="line">"Supports healthy energy levels and overall wellness."</p>
+        </div>
+        <div class="pane pane-after">
+          <span class="label">What LUMEN writes</span>
+          <p class="line">"Your cells have a recycling system. After thirty, it slows. This is the only compound studied in humans to restart it."</p>
+        </div>
+      </div>
+    </div>
+    <div class="standards">
+      <div class="standard" data-reveal><span class="n">i.</span><p>Every claim is traced to its source before it ships. If the evidence can't carry the sentence, the sentence changes.</p></div>
+      <div class="standard" data-reveal><span class="n">ii.</span><p>Mechanism first. A buyer who understands <em>why</em> it works stops comparing you on price.</p></div>
+      <div class="standard" data-reveal><span class="n">iii.</span><p>Written to survive review — Meta, TikTok, FTC. Scaling is a copy problem before it's a media problem.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="shell">
+    <div class="eyebrow" data-reveal>Selected work</div>
+    <div class="work-grid">
+      <a class="work w1" href="#contact" data-reveal>
+        <div class="bg"></div>
+        <div class="meta"><span class="name">FORGE</span><span class="kind">Testosterone VSL — concept build</span></div>
+      </a>
+      <a class="work w2" href="#contact" data-reveal>
+        <div class="bg"></div>
+        <div class="meta"><span class="name">CLARITY</span><span class="kind">Nootropic sales page — concept build</span></div>
+      </a>
+      <a class="work w3" href="#contact" data-reveal>
+        <div class="bg"></div>
+        <div class="meta"><span class="name">DRIFT</span><span class="kind">Cart-recovery flow — concept build</span></div>
+      </a>
+      <a class="work w4" href="#contact" data-reveal>
+        <div class="bg"></div>
+        <div class="meta"><span class="name">SIGNAL</span><span class="kind">NMN ad set — concept build</span></div>
+      </a>
+    </div>
+    <p class="work-note" data-reveal>Concept builds, written to client-grade spec. Client work joins this wall as it ships.</p>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder">
+  <div class="shell">
+    <p class="line" data-reveal>Written by a <strong>medically trained</strong> mind.</p>
+    <p class="sub" data-reveal>One writer. No hand-offs. No juniors.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="shell">
+    <div class="eyebrow" style="justify-content:center" data-reveal>Start a project</div>
+    <h2 data-reveal>Say the thing only <em>you</em> can claim.</h2>
+    <p class="body-copy" data-reveal>Tell me the product and the bottleneck. You'll get a straight answer on whether copy is the lever — and what I'd test first.</p>
+    <div data-reveal>
+      <a class="btn magnetic" href="mailto:mohammedwessam306@gmail.com?subject=LUMEN%20—%20Project%20inquiry">Start a project <span class="arrow">→</span></a>
+      <a class="contact-email" href="mailto:mohammedwessam306@gmail.com">mohammedwessam306@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>LUMEN © 2026</span>
+  <span>Health copy, written responsibly.</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.14/lenis.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  /* smooth scroll */
+  if(!reduced && typeof Lenis !== 'undefined'){
+    const lenis = new Lenis({duration:1.25,easing:t=>1-Math.pow(1-t,4)});
+    function raf(t){lenis.raf(t);requestAnimationFrame(raf)}
+    requestAnimationFrame(raf);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{
+        const id=a.getAttribute('href');
+        if(id.length>1){e.preventDefault();lenis.scrollTo(id,{offset:0})}
+      });
+    });
+  }
+
+  /* hero word-by-word */
+  const h=document.getElementById('heroline');
+  if(h){
+    const walk=(node)=>{
+      [...node.childNodes].forEach(n=>{
+        if(n.nodeType===3){
+          const frag=document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part=>{
+            if(/^\s+$/.test(part)||part===''){frag.appendChild(document.createTextNode(part));return}
+            const w=document.createElement('span');w.className='w';
+            const inner=document.createElement('span');inner.textContent=part;
+            w.appendChild(inner);frag.appendChild(w);
+          });
+          node.replaceChild(frag,n);
+        } else if(n.nodeType===1){walk(n)}
+      });
+    };
+    walk(h);
+    const spans=h.querySelectorAll('.w span');
+    spans.forEach((s,i)=>s.style.transitionDelay=(0.15+i*0.085)+'s');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelector('.hero').classList.add('loaded')));
+  }
+
+  /* reveals */
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+  },{threshold:.18});
+  document.querySelectorAll('[data-reveal]').forEach((el,i)=>{
+    el.style.transitionDelay=((i%4)*0.08)+'s';
+    io.observe(el);
+  });
+  document.querySelectorAll('[data-ecg]').forEach(el=>io.observe(el));
+
+  /* cursor */
+  if(fine && !reduced){
+    const dot=document.querySelector('.cursor-dot'),ring=document.querySelector('.cursor-ring');
+    let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+    addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`});
+    (function loop(){
+      rx+=(mx-rx)*.14;ry+=(my-ry)*.14;
+      ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a,.card,.work').forEach(el=>{
+      el.addEventListener('mouseenter',()=>ring.classList.add('is-active'));
+      el.addEventListener('mouseleave',()=>ring.classList.remove('is-active'));
+    });
+  }
+
+  /* magnetic buttons */
+  if(fine && !reduced){
+    document.querySelectorAll('.magnetic').forEach(btn=>{
+      btn.addEventListener('mousemove',e=>{
+        const r=btn.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2;
+        btn.style.transform=`translate(${x*.22}px,${y*.32}px)`;
+      });
+      btn.addEventListener('mouseleave',()=>{
+        btn.style.transition='transform .6s cubic-bezier(.22,1,.36,1)';
+        btn.style.transform='translate(0,0)';
+        setTimeout(()=>btn.style.transition='',600);
+      });
+    });
+  }
+
+  /* card tilt */
+  if(fine && !reduced){
+    document.querySelectorAll('.tilt').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform=`perspective(900px) rotateX(${-y*5}deg) rotateY(${x*6}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave',()=>{
+        card.style.transition='transform .7s cubic-bezier(.22,1,.36,1)';
+        card.style.transform='';
+        setTimeout(()=>card.style.transition='',700);
+      });
+    });
+  }
+
+  /* quote drift */
+  const par=document.querySelector('[data-parallax]');
+  if(par && !reduced){
+    addEventListener('scroll',()=>{
+      const r=par.getBoundingClientRect();
+      const p=(r.top+r.height/2-innerHeight/2)/innerHeight;
+      par.style.transform=`translateY(${p*-34}px)`;
+    },{passive:true});
+  }
+
+  /* ---------- 3D helix ---------- */
+  const canvas=document.getElementById('helix');
+  if(canvas && typeof THREE!=='undefined'){
+    const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
+    const scene=new THREE.Scene();
+    scene.fog=new THREE.Fog(0x0e0e0e,9,22);
+    const cam=new THREE.PerspectiveCamera(38,1,0.1,100);
+    cam.position.set(0,0,13);
+
+    const group=new THREE.Group();
+    scene.add(group);
+
+    const mobile=innerWidth<880;
+    const TURNS=4.6, PTS=mobile?420:760, RADIUS=2.35, HEIGHT=11;
+    const bone=new THREE.Color(0xE8E2D6), ox=new THREE.Color(0xA03A3A);
+
+    function strand(phase){
+      const pos=new Float32Array(PTS*3), col=new Float32Array(PTS*3);
+      for(let i=0;i<PTS;i++){
+        const t=i/(PTS-1);
+        const a=t*Math.PI*2*TURNS+phase;
+        pos[i*3]=Math.cos(a)*RADIUS;
+        pos[i*3+1]=(t-.5)*HEIGHT;
+        pos[i*3+2]=Math.sin(a)*RADIUS;
+        const c=bone.clone().lerp(ox,Math.abs(Math.sin(a*0.5))*.35);
+        col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
+      }
+      const g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+      g.setAttribute('color',new THREE.BufferAttribute(col,3));
+      const m=new THREE.PointsMaterial({size:mobile?0.045:0.05,vertexColors:true,transparent:true,opacity:.9,depthWrite:false});
+      return new THREE.Points(g,m);
+    }
+    group.add(strand(0));
+    group.add(strand(Math.PI));
+
+    /* rungs */
+    const RUNGS=mobile?26:46;
+    const rpos=new Float32Array(RUNGS*2*3);
+    for(let i=0;i<RUNGS;i++){
+      const t=i/(RUNGS-1), a=t*Math.PI*2*TURNS;
+      rpos[i*6]=Math.cos(a)*RADIUS; rpos[i*6+1]=(t-.5)*HEIGHT; rpos[i*6+2]=Math.sin(a)*RADIUS;
+      rpos[i*6+3]=Math.cos(a+Math.PI)*RADIUS; rpos[i*6+4]=(t-.5)*HEIGHT; rpos[i*6+5]=Math.sin(a+Math.PI)*RADIUS;
+    }
+    const rg=new THREE.BufferGeometry();
+    rg.setAttribute('position',new THREE.BufferAttribute(rpos,3));
+    group.add(new THREE.LineSegments(rg,new THREE.LineBasicMaterial({color:0x7A2E2E,transparent:true,opacity:.34})));
+
+    /* ambient dust */
+    const DUST=mobile?160:320;
+    const dpos=new Float32Array(DUST*3);
+    for(let i=0;i<DUST;i++){
+      dpos[i*3]=(Math.random()-.5)*22;
+      dpos[i*3+1]=(Math.random()-.5)*14;
+      dpos[i*3+2]=(Math.random()-.5)*10-2;
+    }
+    const dg=new THREE.BufferGeometry();
+    dg.setAttribute('position',new THREE.BufferAttribute(dpos,3));
+    scene.add(new THREE.Points(dg,new THREE.PointsMaterial({color:0xE8E2D6,size:0.022,transparent:true,opacity:.35,depthWrite:false})));
+
+    group.rotation.z=0.32;
+
+    let tx=0,ty=0,cx=0,cy=0;
+    addEventListener('mousemove',e=>{
+      tx=(e.clientX/innerWidth-.5);
+      ty=(e.clientY/innerHeight-.5);
+    },{passive:true});
+
+    function size(){
+      const hero=document.querySelector('.hero');
+      const w=hero.offsetWidth,h2=hero.offsetHeight;
+      renderer.setSize(w,h2,false);
+      cam.aspect=w/h2;cam.updateProjectionMatrix();
+    }
+    size();addEventListener('resize',size);
+
+    let visible=true;
+    new IntersectionObserver(es=>{visible=es[0].isIntersecting},{threshold:0}).observe(canvas);
+
+    const clock=new THREE.Clock();
+    (function tick(){
+      requestAnimationFrame(tick);
+      if(!visible)return;
+      const t=clock.getElapsedTime();
+      if(!reduced){
+        group.rotation.y=t*0.12;
+        group.position.y=Math.sin(t*0.4)*0.18;
+        cx+=(tx-cx)*.04; cy+=(ty-cy)*.04;
+        group.rotation.x=cy*0.25;
+        cam.position.x=cx*1.1;
+        cam.lookAt(0,0,0);
+      }
+      renderer.render(scene,cam);
+    })();
+  }
+})();
+</script>
+</body>
+</html>
