@@ -1,0 +1,25 @@
+1. FIX THE BREAKING STATS COUNTER BUGS:
+Locate the statistics metrics section right below the hero section. Currently, the counters display "0" because the JavaScript execution is failing or blocked. Remove the dynamic JavaScript counter logic entirely for these elements. Instead, hardcode clean, high-value static text directly into the HTML spans so they display perfectly on page load:
+- Change the compliance layer metric to show: "3+"
+- Change the turnaround metric to show: "24h"
+- Change the claim categories metric to show: "120+"
+
+2. ELIMINATE LEAD MAGNET PRICING CONFUSION:
+Standardize the messaging right above the final email submission opt-in form to ensure high conversion clarity. Update the sub-headline text explicitly to read:
+"Get your 24-Hour Funnel Audit ($250 Value) — 100% Free. No pitch. No calendar booking. Just a brutal breakdown of your biggest conversion leaks and compliance risks delivered straight to your inbox."
+
+3. ADD AN AUTHORITY TRUST BAR:
+Directly below the hero/stats section, inject a sleek, minimal, horizontal authority text grid to visually anchor credibility since we aren't using client logos. 
+- Give it a thin border, a very subtle dark background tint (e.g., rgba(255, 255, 255, 0.02)), and center the elements.
+- Main title text: "OUR COMPLIANCE FRAMEWORK PULLS DIRECT FROM:" (Make this small, uppercase, widely spaced, and muted gray).
+- Grid item text labels: "FDA Guidelines", "FTC Deceptive Ad Rules", "PubMed Literature", and "Meta Ads Policy". Make these text items look clean, modern, bold, and slightly muted.
+
+4. FORMAT THE FIRST FAQ FOR MOBILE SCANNABILITY:
+Locate the first FAQ block answering the question: "I’ve hired copywriters before, what makes you different?". The current answer is too dense. Break up that solid wall of text into a readable introduction followed by a clean, punchy bulleted list:
+- Intro sentence: "Most copywriters copy your competitor's landing pages. If your competitor is breaking FTC guidelines, you inherit their lawsuit. Here is how we differ:"
+- Bullet 1: "Primary Literature: We build hooks directly from raw clinical trials on PubMed."
+- Bullet 2: "Legal Guardrails: We cross-reference every claim against current FDA inspection trends."
+- Bullet 3: "Direct Response Psychology: We protect your ad account while aggressively driving the sale."
+
+5. GENERAL REVIEW:
+Ensure all layout padding, text alignment, and responsive flexbox behaviors remain fully intact across both mobile and desktop views after making these modifications.
