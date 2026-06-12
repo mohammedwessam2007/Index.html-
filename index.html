@@ -9,575 +9,629 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════════════ */
 :root{
-  --ink:#0E0E0E;
-  --carbon:#131211;
-  --card:#171614;
+  --ink:#0C0B0A;
+  --carbon:#111010;
+  --card:#161412;
+  --card2:#1a1816;
   --bone:#E8E2D6;
-  --bone-70:rgba(232,226,214,.70);
-  --bone-45:rgba(232,226,214,.45);
-  --bone-20:rgba(232,226,214,.20);
-  --bone-10:rgba(232,226,214,.10);
-  --bone-06:rgba(232,226,214,.06);
+  --bone-80:rgba(232,226,214,.80);
+  --bone-55:rgba(232,226,214,.55);
+  --bone-30:rgba(232,226,214,.30);
+  --bone-15:rgba(232,226,214,.15);
+  --bone-07:rgba(232,226,214,.07);
+  --bone-04:rgba(232,226,214,.04);
   --ox:#7A2E2E;
   --ox-mid:#9B3535;
   --ox-bright:#C0443A;
-  --ox-glow:rgba(192,68,58,.18);
+  --ox-glow:rgba(192,68,58,.14);
+  --ox-glow2:rgba(192,68,58,.06);
   --green:#4e9e6e;
-  --green-bg:rgba(78,158,110,.12);
-  --green-border:rgba(78,158,110,.3);
+  --green-bg:rgba(78,158,110,.1);
+  --green-border:rgba(78,158,110,.28);
   --amber:#c8a84b;
-  --amber-bg:rgba(200,168,75,.12);
-  --amber-border:rgba(200,168,75,.3);
+  --amber-bg:rgba(200,168,75,.1);
+  --amber-border:rgba(200,168,75,.28);
   --serif:'Cormorant Garamond',Georgia,serif;
   --sans:'Archivo',Helvetica,Arial,sans-serif;
   --ease:cubic-bezier(.22,1,.36,1);
-  --ease-in:cubic-bezier(.55,0,1,.45);
-  --max:1160px;
-  --nav-h:68px;
+  --ease-in:cubic-bezier(.55,0,.45,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --max:1180px;
+  --nav-h:66px;
 }
+
+/* ═══════════════════════════════════════════════
+   BASE
+════════════════════════════════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  background:var(--ink);
-  color:var(--bone);
-  font-family:var(--sans);
-  font-size:16px;
-  line-height:1.65;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  background:var(--ink);color:var(--bone);
+  font-family:var(--sans);font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  opacity:0;animation:pageIn .7s var(--ease) .1s forwards;
 }
+@keyframes pageIn{to{opacity:1}}
 ::selection{background:var(--ox);color:var(--bone)}
 a{color:inherit;text-decoration:none}
-img{display:block;max-width:100%}
 
-/* ── PROGRESS BAR ───────────────────────────── */
-#progress{
+/* grain overlay */
+body::after{
+  content:"";position:fixed;inset:0;z-index:9000;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  opacity:1;
+}
+
+/* ═══════════════════════════════════════════════
+   CURSOR
+════════════════════════════════════════════════ */
+.c-dot,.c-ring{position:fixed;z-index:9999;top:0;left:0;pointer-events:none;border-radius:50%}
+.c-dot{width:5px;height:5px;background:var(--bone);transform:translate(-50%,-50%);transition:transform .06s linear,background .3s,width .25s var(--ease),height .25s var(--ease)}
+.c-ring{
+  width:32px;height:32px;border:1px solid var(--bone-30);
+  transform:translate(-50%,-50%);
+  transition:width .4s var(--ease),height .4s var(--ease),border-color .3s,background .3s;
+}
+.c-ring.hover{width:58px;height:58px;border-color:var(--ox-bright);background:var(--ox-glow2)}
+.c-ring.click{width:22px;height:22px;background:var(--ox-glow);border-color:var(--ox-bright)}
+@media (hover:none),(pointer:coarse){.c-dot,.c-ring{display:none}}
+
+/* ═══════════════════════════════════════════════
+   PROGRESS
+════════════════════════════════════════════════ */
+#progress{position:fixed;top:0;left:0;right:0;z-index:600;height:2px;pointer-events:none}
+#pfill{height:100%;width:0%;background:linear-gradient(90deg,var(--ox),var(--ox-bright),#e85d52);transition:width .12s linear}
+
+/* ═══════════════════════════════════════════════
+   TICKER
+════════════════════════════════════════════════ */
+.ticker{
   position:fixed;top:0;left:0;right:0;z-index:500;
-  height:2px;background:transparent;pointer-events:none;
+  height:28px;background:var(--ox-bright);
+  display:flex;overflow:hidden;align-items:center;
 }
-#progress-fill{
-  height:100%;width:0%;
-  background:linear-gradient(90deg,var(--ox),var(--ox-bright));
-  transition:width .1s linear;
+.ticker-track{
+  display:flex;align-items:center;gap:0;
+  animation:ticker 28s linear infinite;
+  white-space:nowrap;flex-shrink:0;
 }
+.ticker-track span{
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.82);
+  padding:0 28px;
+}
+.ticker-track .sep{color:rgba(255,255,255,.35);padding:0;letter-spacing:0}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* ── NAV ──────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   NAV
+════════════════════════════════════════════════ */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:300;
+  position:fixed;top:28px;left:0;right:0;z-index:400;
   height:var(--nav-h);
   display:flex;justify-content:space-between;align-items:center;
   padding:0 clamp(20px,5vw,60px);
-  background:rgba(14,14,14,.9);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--bone-06);
-  transition:border-color .3s;
+  background:rgba(12,11,10,.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bone-07);
+  transition:border-color .4s,background .4s;
 }
-nav.scrolled{border-bottom-color:var(--bone-10)}
-.wordmark{font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.44em;color:var(--bone)}
-.nav-links{display:flex;align-items:center;gap:clamp(20px,3vw,40px)}
-.nav-link{
-  font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-45);
-  transition:color .22s;
-}
+nav.scrolled{background:rgba(12,11,10,.95);border-color:var(--bone-15)}
+.wordmark{font-weight:600;font-size:13.5px;letter-spacing:.46em;color:var(--bone)}
+.nav-links{display:flex;align-items:center;gap:clamp(18px,2.8vw,38px)}
+.nav-link{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-55);transition:color .22s}
 .nav-link:hover{color:var(--bone)}
 .nav-cta{
-  font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
   background:var(--ox-bright);color:var(--bone);
-  padding:11px 24px;border-radius:3px;
-  transition:background .22s,transform .22s var(--ease);
+  padding:10px 22px;border-radius:3px;
+  transition:background .22s,transform .25s var(--ease),box-shadow .25s;
 }
-.nav-cta:hover{background:var(--ox-mid);transform:translateY(-1px)}
-.nav-cta:active{transform:translateY(0)}
-
-/* hamburger */
-.hamburger{
-  display:none;flex-direction:column;gap:5px;
-  background:none;border:none;cursor:pointer;padding:4px;
-}
-.hamburger span{
-  display:block;width:22px;height:1.5px;background:var(--bone);
-  transition:transform .3s var(--ease),opacity .3s;transform-origin:center;
-}
+.nav-cta:hover{background:var(--ox-mid);transform:translateY(-2px);box-shadow:0 6px 20px rgba(192,68,58,.3)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--bone);transition:transform .32s var(--ease),opacity .25s;transform-origin:center}
 .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
 .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-
-/* mobile nav drawer */
 .mobile-drawer{
-  position:fixed;top:var(--nav-h);left:0;right:0;z-index:250;
-  background:rgba(14,14,14,.97);
-  backdrop-filter:blur(20px);
-  padding:32px clamp(20px,5vw,60px) 40px;
-  border-bottom:1px solid var(--bone-10);
-  display:flex;flex-direction:column;gap:20px;
-  transform:translateY(-110%);
-  transition:transform .4s var(--ease);
-  pointer-events:none;
+  position:fixed;top:calc(28px + var(--nav-h));left:0;right:0;z-index:350;
+  background:rgba(12,11,10,.97);backdrop-filter:blur(20px);
+  padding:30px clamp(20px,5vw,60px) 36px;
+  border-bottom:1px solid var(--bone-15);
+  display:flex;flex-direction:column;gap:18px;
+  transform:translateY(-110%);transition:transform .42s var(--ease);pointer-events:none;
 }
 .mobile-drawer.open{transform:none;pointer-events:auto}
-.mobile-drawer a{
-  font-size:15px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--bone-70);padding:10px 0;border-bottom:1px solid var(--bone-06);
-  transition:color .22s;
-}
+.mobile-drawer a{font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-55);padding:10px 0;border-bottom:1px solid var(--bone-07);transition:color .22s}
 .mobile-drawer a:hover{color:var(--bone)}
-.mobile-drawer .m-cta{
-  margin-top:8px;background:var(--ox-bright);color:var(--bone);
-  text-align:center;padding:16px;border-radius:3px;border:none;
-  letter-spacing:.24em;
-}
+.mobile-drawer .m-cta{background:var(--ox-bright);color:var(--bone);text-align:center;padding:15px;border-radius:3px;border-bottom:none;letter-spacing:.22em;margin-top:4px}
 
-/* ── SHARED ────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   STICKY BAR
+════════════════════════════════════════════════ */
+#sticky-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:390;
+  background:rgba(16,10,10,.96);backdrop-filter:blur(14px);
+  border-top:1px solid rgba(192,68,58,.28);
+  padding:12px clamp(20px,5vw,60px);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  transform:translateY(100%);transition:transform .5s var(--ease);
+}
+#sticky-bar.visible{transform:none}
+.sb-text{font-size:13px;color:var(--bone-55)}
+.sb-text strong{color:var(--bone-80);font-weight:500}
+.sb-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.sb-dismiss{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-30);background:none;border:none;cursor:pointer;padding:4px 8px;transition:color .2s}
+.sb-dismiss:hover{color:var(--bone-55)}
+
+/* ═══════════════════════════════════════════════
+   SHARED
+════════════════════════════════════════════════ */
 .shell{max-width:var(--max);margin:0 auto;padding:0 clamp(20px,5vw,60px)}
 section{padding:clamp(80px,12vh,130px) 0}
 h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.06;letter-spacing:-.01em}
-.label{
-  font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--ox-bright);
-  display:flex;align-items:center;gap:10px;margin-bottom:20px;
-}
-.label::before{content:"";width:28px;height:1px;background:var(--ox-bright);flex-shrink:0}
+.label{font-size:10.5px;letter-spacing:.36em;text-transform:uppercase;color:var(--ox-bright);display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.label::before{content:"";width:26px;height:1px;background:var(--ox-bright);flex-shrink:0}
 
 /* reveals */
-[data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+[data-reveal]{opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 [data-reveal].in{opacity:1;transform:none}
-[data-reveal-fade]{opacity:0;transition:opacity .85s var(--ease)}
-[data-reveal-fade].in{opacity:1}
 
 /* buttons */
-.btn-primary{
-  display:inline-flex;align-items:center;gap:12px;
+.btn-p{
+  display:inline-flex;align-items:center;gap:11px;
   background:var(--ox-bright);color:var(--bone);
-  font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
-  padding:17px 34px;border-radius:3px;
-  border:none;cursor:pointer;
-  transition:background .22s,transform .22s var(--ease),box-shadow .22s;
+  font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  padding:16px 32px;border-radius:3px;border:none;cursor:pointer;
+  transition:background .22s,transform .25s var(--ease),box-shadow .25s;
   position:relative;overflow:hidden;
 }
-.btn-primary::after{
-  content:"";position:absolute;inset:0;
-  background:rgba(255,255,255,.08);
-  opacity:0;transition:opacity .22s;
-}
-.btn-primary:hover{background:var(--ox-mid);transform:translateY(-2px);box-shadow:0 8px 28px rgba(192,68,58,.28)}
-.btn-primary:hover::after{opacity:1}
-.btn-primary:active{transform:translateY(0);box-shadow:none}
-.btn-primary .arrow{transition:transform .3s var(--ease);display:inline-block}
-.btn-primary:hover .arrow{transform:translateX(5px)}
+.btn-p::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.1);opacity:0;transition:opacity .22s}
+.btn-p:hover{background:var(--ox-mid);transform:translateY(-2px);box-shadow:0 10px 30px rgba(192,68,58,.3)}
+.btn-p:hover::after{opacity:1}
+.btn-p:active{transform:translateY(0);box-shadow:none}
+.btn-p .arr{display:inline-block;transition:transform .3s var(--ease)}
+.btn-p:hover .arr{transform:translateX(5px)}
 
-.btn-ghost{
+.btn-g{
   display:inline-flex;align-items:center;gap:10px;
-  font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--bone-45);
-  border:1px solid var(--bone-20);border-radius:3px;
-  padding:16px 32px;
-  transition:color .22s,border-color .22s,transform .22s var(--ease);
-  cursor:pointer;background:none;font-family:var(--sans);
+  font-family:var(--sans);font-size:11.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--bone-55);border:1px solid var(--bone-30);border-radius:3px;
+  padding:15px 30px;cursor:pointer;background:none;
+  transition:color .22s,border-color .22s,transform .25s var(--ease);
 }
-.btn-ghost:hover{color:var(--bone);border-color:var(--bone-45);transform:translateY(-1px)}
+.btn-g:hover{color:var(--bone);border-color:var(--bone-55);transform:translateY(-1px)}
 
-.btn-secondary{
-  font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-45);
-  border-bottom:1px solid var(--bone-20);padding-bottom:3px;
-  transition:color .22s,border-color .22s;
-}
-.btn-secondary:hover{color:var(--bone);border-color:var(--bone-45)}
+.btn-s{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-55);border-bottom:1px solid var(--bone-30);padding-bottom:3px;transition:color .22s,border-color .22s}
+.btn-s:hover{color:var(--bone);border-color:var(--bone-55)}
 
-/* ── STICKY BOTTOM BAR ─────────────────────── */
-#sticky-bar{
-  position:fixed;bottom:0;left:0;right:0;z-index:290;
-  background:rgba(20,12,12,.96);
-  backdrop-filter:blur(12px);
-  border-top:1px solid rgba(192,68,58,.3);
-  padding:14px clamp(20px,5vw,60px);
-  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
-  transform:translateY(100%);
-  transition:transform .5s var(--ease);
-}
-#sticky-bar.visible{transform:none}
-.sticky-text{font-size:13px;color:var(--bone-70)}
-.sticky-text strong{color:var(--bone);font-weight:500}
-.sticky-dismiss{
-  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-20);
-  background:none;border:none;cursor:pointer;padding:4px 8px;transition:color .2s;
-}
-.sticky-dismiss:hover{color:var(--bone-45)}
-
-/* ── HERO ──────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   HERO
+════════════════════════════════════════════════ */
 .hero{
   min-height:100vh;display:flex;align-items:center;
-  padding-top:var(--nav-h);
+  padding-top:calc(28px + var(--nav-h) + 20px);
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
   background:
-    radial-gradient(ellipse 65% 55% at 85% 45%,rgba(122,46,46,.15),transparent 65%),
-    radial-gradient(ellipse 40% 40% at 10% 90%,rgba(122,46,46,.06),transparent 60%),
+    radial-gradient(ellipse 70% 60% at 82% 40%,rgba(122,46,46,.18),transparent 60%),
+    radial-gradient(ellipse 45% 45% at 8% 85%,rgba(122,46,46,.08),transparent 55%),
     var(--ink);
+  animation:heroBg 12s ease-in-out infinite alternate;
 }
-.hero .label{margin-bottom:28px}
-.hero h1{
-  font-size:clamp(42px,6.2vw,94px);
-  max-width:16ch;
-  margin-bottom:clamp(20px,3vh,30px);
+@keyframes heroBg{
+  0%{background-position:0 0}
+  100%{background-position:4px 8px}
 }
-.hero h1 em{font-style:italic;color:var(--ox-bright)}
-.hero-sub{
-  color:var(--bone-70);font-size:clamp(16px,1.25vw,18px);
-  max-width:52ch;line-height:1.75;
-  margin-bottom:clamp(32px,4.5vh,48px);
-}
-.hero-sub strong{color:var(--bone);font-weight:500}
-.cta-group{display:flex;align-items:center;gap:clamp(14px,2vw,24px);flex-wrap:wrap}
-.hero-trust{
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-  margin-top:clamp(36px,5.5vh,56px);
-  padding-top:clamp(28px,4vh,40px);
-  border-top:1px solid var(--bone-10);
-}
-.trust-item{font-size:12px;color:var(--bone-45);letter-spacing:.04em;display:flex;align-items:center;gap:8px}
-.trust-item strong{color:var(--bone-70);font-weight:500}
-.trust-item::before{content:"✓";color:var(--ox-bright);font-size:11px}
-.trust-sep{width:1px;height:16px;background:var(--bone-10)}
+.hero .shell{position:relative;z-index:2}
+.hero .label{margin-bottom:32px}
 
-/* ── PROBLEM ───────────────────────────────── */
+/* word-reveal headline */
+.h-line{display:block;overflow:hidden;line-height:1.1}
+.h-word{display:inline-block;transform:translateY(105%);opacity:0;animation:wordIn .9s var(--ease) both}
+@keyframes wordIn{to{transform:none;opacity:1}}
+.hero h1{font-size:clamp(44px,6.4vw,98px);max-width:16ch;margin-bottom:clamp(20px,3vh,30px)}
+.hero h1 em{font-style:italic;color:var(--ox-bright)}
+
+.hero-sub{color:var(--bone-55);font-size:clamp(15px,1.2vw,18px);max-width:52ch;line-height:1.78;margin-bottom:clamp(30px,4.5vh,46px);opacity:0;transform:translateY(18px);animation:fadeUp .9s var(--ease) 1s both}
+.hero-sub strong{color:var(--bone-80);font-weight:500}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+
+.cta-grp{display:flex;align-items:center;gap:clamp(14px,2vw,24px);flex-wrap:wrap;opacity:0;animation:fadeUp .9s var(--ease) 1.2s both}
+.hero-trust{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  margin-top:clamp(34px,5vh,52px);padding-top:clamp(26px,3.5vh,38px);
+  border-top:1px solid var(--bone-07);
+  opacity:0;animation:fadeUp .9s var(--ease) 1.4s both;
+}
+.ti{font-size:11.5px;color:var(--bone-55);display:flex;align-items:center;gap:7px}
+.ti::before{content:"✓";color:var(--ox-bright);font-size:11px;flex-shrink:0}
+.ti strong{color:var(--bone-80);font-weight:500}
+.ts{width:1px;height:14px;background:var(--bone-15)}
+
+/* scroll indicator */
+.scroll-cue{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:9.5px;letter-spacing:.36em;text-transform:uppercase;color:var(--bone-30);
+  opacity:0;animation:fadeUp .9s var(--ease) 2s both;
+}
+.scroll-cue::after{content:"";width:1px;height:40px;background:linear-gradient(var(--bone-30),transparent);animation:scrollPulse 2.2s var(--ease) infinite}
+@keyframes scrollPulse{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ═══════════════════════════════════════════════
+   STATS
+════════════════════════════════════════════════ */
+.stats{background:var(--carbon);padding:clamp(40px,6vh,64px) 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bone-07);border:1px solid var(--bone-07);border-radius:6px;overflow:hidden}
+.stat{background:var(--card);padding:clamp(24px,2.8vw,36px) clamp(20px,2.2vw,30px);text-align:center;transition:background .3s}
+.stat:hover{background:var(--card2)}
+.stat-num{font-family:var(--serif);font-size:clamp(36px,4.4vw,64px);font-weight:600;color:var(--bone);line-height:1;display:block;margin-bottom:8px}
+.stat-num sup{font-size:.45em;vertical-align:super;margin-right:1px;color:var(--ox-bright)}
+.stat-num .unit{font-size:.42em;color:var(--ox-bright);font-style:italic}
+.stat-label{font-size:11.5px;color:var(--bone-55);letter-spacing:.06em;line-height:1.4}
+
+/* ═══════════════════════════════════════════════
+   ECG DIVIDER
+════════════════════════════════════════════════ */
+.ecg-wrap{padding:0;overflow:hidden;line-height:0}
+.ecg{display:block;width:100%;overflow:visible}
+.ecg path{
+  fill:none;stroke:var(--ox-bright);stroke-width:1.2;opacity:.7;
+  stroke-dasharray:900;stroke-dashoffset:900;
+  transition:stroke-dashoffset 2.2s var(--ease);
+}
+.ecg.in path{stroke-dashoffset:0}
+
+/* ═══════════════════════════════════════════════
+   PROBLEM
+════════════════════════════════════════════════ */
 .problem{background:var(--carbon)}
-.problem h2{font-size:clamp(30px,4vw,56px);max-width:22ch;margin-top:12px;margin-bottom:clamp(40px,6vh,64px)}
-.pain-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--bone-10);
-  border:1px solid var(--bone-10);border-radius:6px;overflow:hidden;
+.problem h2{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-bottom:clamp(38px,6vh,60px)}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bone-07);border:1px solid var(--bone-07);border-radius:6px;overflow:hidden}
+.pain{background:var(--card);padding:clamp(26px,2.8vw,42px);position:relative;overflow:hidden;cursor:default}
+.pain::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(400px at var(--mx,50%) var(--my,50%),rgba(192,68,58,.09),transparent 70%);
+  opacity:0;transition:opacity .4s;pointer-events:none;
 }
-.pain{background:var(--card);padding:clamp(26px,2.8vw,42px);transition:background .3s}
-.pain:hover{background:#1a1817}
-.pain-num{
-  font-family:var(--serif);font-style:italic;font-size:44px;font-weight:500;
-  color:var(--ox-bright);opacity:.3;line-height:1;margin-bottom:18px;display:block;
-  transition:opacity .3s;
-}
-.pain:hover .pain-num{opacity:.55}
-.pain h3{font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--bone);margin-bottom:11px;line-height:1.4;letter-spacing:0}
-.pain p{font-size:13.5px;color:var(--bone-45);line-height:1.7}
-.pain p strong{color:var(--bone-70);font-weight:500}
+.pain:hover::before{opacity:1}
+.pain-num{font-family:var(--serif);font-style:italic;font-size:42px;font-weight:500;color:var(--ox-bright);opacity:.28;line-height:1;margin-bottom:16px;display:block;transition:opacity .35s}
+.pain:hover .pain-num{opacity:.6}
+.pain h3{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--bone);margin-bottom:11px;line-height:1.4;letter-spacing:.01em}
+.pain p{font-size:13.5px;color:var(--bone-55);line-height:1.72}
+.pain p strong{color:var(--bone-80);font-weight:500}
 .problem-truth{
-  margin-top:clamp(40px,5.5vh,60px);
-  padding:clamp(26px,3vw,42px);
-  background:var(--card);
-  border:1px solid var(--bone-10);
-  border-left:3px solid var(--ox-bright);
-  border-radius:0 6px 6px 0;
+  margin-top:clamp(38px,5vh,56px);padding:clamp(24px,2.8vw,40px);
+  background:var(--card);border:1px solid var(--bone-07);border-left:3px solid var(--ox-bright);border-radius:0 6px 6px 0;
 }
-.problem-truth p{
-  font-family:var(--serif);font-size:clamp(20px,2.4vw,30px);font-weight:500;
-  line-height:1.28;max-width:32ch;
-}
+.problem-truth p{font-family:var(--serif);font-size:clamp(20px,2.3vw,30px);font-weight:500;line-height:1.28;max-width:32ch}
 .problem-truth p em{font-style:italic;color:var(--ox-bright)}
 
-/* ── SOLUTION ──────────────────────────────── */
-.solution h2{font-size:clamp(30px,4vw,56px);max-width:22ch;margin-top:12px;margin-bottom:clamp(16px,2.5vh,24px)}
-.solution-lead{
-  font-size:clamp(15px,1.2vw,18px);color:var(--bone-70);
-  max-width:60ch;line-height:1.8;
-  margin-bottom:clamp(40px,6vh,60px);
-}
-.solution-lead strong{color:var(--bone);font-weight:500}
-.solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.2vw,28px)}
+/* ═══════════════════════════════════════════════
+   SOLUTION
+════════════════════════════════════════════════ */
+.solution h2{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-bottom:clamp(16px,2.5vh,22px)}
+.solution-lead{font-size:clamp(15px,1.2vw,18px);color:var(--bone-55);max-width:60ch;line-height:1.8;margin-bottom:clamp(38px,5.5vh,56px)}
+.solution-lead strong{color:var(--bone-80);font-weight:500}
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,24px)}
 .sol-card{
-  background:var(--card);border:1px solid var(--bone-10);border-radius:6px;
-  padding:clamp(26px,2.8vw,42px);position:relative;overflow:hidden;
-  transition:border-color .35s var(--ease),transform .35s var(--ease);
+  background:var(--card);border:1px solid var(--bone-07);border-radius:6px;
+  padding:clamp(24px,2.6vw,40px);position:relative;overflow:hidden;
+  transition:border-color .35s var(--ease),transform .35s var(--ease);cursor:default;
 }
-.sol-card:hover{border-color:rgba(192,68,58,.3);transform:translateY(-3px)}
 .sol-card::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--ox-bright),transparent);
-  border-radius:6px 6px 0 0;
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(500px at var(--mx,50%) var(--my,50%),rgba(192,68,58,.1),transparent 70%);
+  opacity:0;transition:opacity .4s;pointer-events:none;
 }
-.sol-icon{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ox-bright);letter-spacing:.08em;margin-bottom:16px;display:block}
-.sol-card h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--bone);margin-bottom:11px;letter-spacing:0;line-height:1.4}
-.sol-card p{font-size:13.5px;color:var(--bone-45);line-height:1.7}
-.sol-card p strong{color:var(--bone-70);font-weight:500}
-.sol-card p em{color:var(--bone-70)}
+.sol-card:hover::before{opacity:1}
+.sol-card::after{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ox-bright),transparent);border-radius:6px 6px 0 0}
+.sol-card:hover{border-color:rgba(192,68,58,.28);transform:translateY(-3px)}
+.sol-icon{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ox-bright);letter-spacing:.1em;margin-bottom:15px;display:block}
+.sol-card h3{font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--bone);margin-bottom:11px;letter-spacing:.01em;line-height:1.4}
+.sol-card p{font-size:13.5px;color:var(--bone-55);line-height:1.72}
+.sol-card p strong{color:var(--bone-80);font-weight:500}
 
-/* ── PROCESS ───────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   PROCESS
+════════════════════════════════════════════════ */
 .process{background:var(--carbon)}
-.process h2{font-size:clamp(30px,4vw,56px);max-width:22ch;margin-top:12px;margin-bottom:clamp(40px,6vh,60px)}
-.process-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative}
-.process-steps::before{
-  content:"";position:absolute;
-  top:28px;left:calc(16.66% + 14px);right:calc(16.66% + 14px);
-  height:1px;background:linear-gradient(90deg,var(--bone-10),var(--ox-bright) 50%,var(--bone-10));
+.process h2{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-bottom:clamp(38px,6vh,60px)}
+.proc-steps{display:grid;grid-template-columns:repeat(3,1fr);position:relative}
+.proc-steps::before{
+  content:"";position:absolute;top:27px;left:calc(16.6% + 12px);right:calc(16.6% + 12px);
+  height:1px;background:linear-gradient(90deg,var(--bone-15),var(--ox-bright) 50%,var(--bone-15));
 }
-.step{padding:0 clamp(16px,2vw,28px);position:relative}
-.step-num{
-  width:56px;height:56px;border-radius:50%;
-  background:var(--card);border:1px solid var(--bone-10);
+.proc-step{padding:0 clamp(14px,2vw,26px);position:relative}
+.proc-num{
+  width:54px;height:54px;border-radius:50%;
+  background:var(--card);border:1px solid var(--bone-15);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-style:italic;font-size:22px;font-weight:500;color:var(--ox-bright);
-  margin-bottom:22px;position:relative;z-index:1;
-  transition:border-color .3s,background .3s;
+  font-family:var(--serif);font-style:italic;font-size:20px;font-weight:500;color:var(--ox-bright);
+  margin-bottom:20px;position:relative;z-index:1;
+  transition:border-color .35s,background .35s,transform .35s var(--ease-spring);
 }
-.step:hover .step-num{border-color:rgba(192,68,58,.5);background:#1d1615}
-.step h3{font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--bone);margin-bottom:10px;line-height:1.4;letter-spacing:0}
-.step p{font-size:13.5px;color:var(--bone-45);line-height:1.7}
-.step p strong{color:var(--bone-70);font-weight:500}
+.proc-step:hover .proc-num{border-color:rgba(192,68,58,.5);background:var(--card2);transform:scale(1.08)}
+.proc-step h3{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--bone);margin-bottom:9px;line-height:1.4;letter-spacing:.01em}
+.proc-step p{font-size:13.5px;color:var(--bone-55);line-height:1.7}
+.proc-step p strong{color:var(--bone-80);font-weight:500}
 
-/* ── PROOF ─────────────────────────────────── */
-.proof{background:var(--ink)}
-.proof h2{font-size:clamp(30px,4vw,56px);max-width:22ch;margin-top:12px;margin-bottom:clamp(40px,6vh,60px)}
+/* ═══════════════════════════════════════════════
+   PROOF — INTERACTIVE TOGGLE
+════════════════════════════════════════════════ */
+.proof h2{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-bottom:clamp(38px,6vh,60px)}
 .rewrites{display:flex;flex-direction:column;gap:clamp(14px,2vh,20px)}
-.rewrite{background:var(--card);border:1px solid var(--bone-10);border-radius:6px;overflow:hidden;transition:border-color .3s}
-.rewrite:hover{border-color:rgba(192,68,58,.25)}
-.rewrite-header{
+.rewrite{background:var(--card);border:1px solid var(--bone-07);border-radius:6px;overflow:hidden;transition:border-color .3s}
+.rewrite:hover{border-color:rgba(192,68,58,.2)}
+.rw-header{
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  padding:14px clamp(18px,2.2vw,32px);
-  border-bottom:1px solid var(--bone-10);
-  background:rgba(255,255,255,.02);
+  padding:14px clamp(18px,2.2vw,30px);border-bottom:1px solid var(--bone-07);background:rgba(255,255,255,.018);
 }
-.rewrite-product{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-45)}
-.rewrite-tag{
-  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-  padding:4px 11px;border-radius:20px;
-  background:var(--ox-glow);color:var(--ox-bright);
-  border:1px solid rgba(192,68,58,.3);white-space:nowrap;
+.rw-product{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-55)}
+.rw-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;padding:4px 11px;border-radius:20px;background:var(--ox-glow);color:var(--ox-bright);border:1px solid rgba(192,68,58,.28);white-space:nowrap}
+.rw-tabs{display:flex;border-bottom:1px solid var(--bone-07)}
+.rw-tab{
+  flex:1;padding:13px 20px;background:none;border:none;cursor:pointer;
+  font-family:var(--sans);font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--bone-30);transition:color .22s,background .22s;
+  border-right:1px solid var(--bone-07);position:relative;
 }
-.rewrite-body{display:grid;grid-template-columns:1fr 1fr}
-.rw-pane{padding:clamp(20px,2.2vw,32px)}
-.rw-pane+.rw-pane{border-left:1px solid var(--bone-10)}
-.rw-label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;margin-bottom:13px;display:block}
-.rw-pane.before .rw-label{color:var(--bone-20)}
+.rw-tab:last-child{border-right:none}
+.rw-tab.active{color:var(--ox-bright);background:var(--ox-glow2)}
+.rw-tab.active::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ox-bright)}
+.rw-panes{padding:clamp(20px,2.2vw,32px)}
+.rw-pane{display:none}
+.rw-pane.active{display:block}
+.rw-label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;margin-bottom:12px;display:block}
+.rw-pane.before .rw-label{color:var(--bone-30)}
 .rw-pane.after .rw-label{color:var(--ox-bright)}
-.rw-copy{font-family:var(--serif);font-weight:500;font-size:clamp(16px,1.7vw,22px);line-height:1.32}
-.rw-pane.before .rw-copy{color:var(--bone-20);text-decoration:line-through;text-decoration-color:rgba(192,68,58,.5);text-decoration-thickness:1px}
-.rw-pane.after .rw-copy{color:var(--bone)}
-.rw-note{margin-top:12px;font-size:12px;color:var(--bone-45);line-height:1.6;font-style:italic}
+.rw-copy{font-family:var(--serif);font-weight:500;font-size:clamp(18px,2vw,26px);line-height:1.3;color:var(--bone)}
+.rw-pane.before .rw-copy{color:var(--bone-30)}
+.rw-note{margin-top:14px;font-size:12.5px;color:var(--bone-55);line-height:1.65;font-style:italic;border-left:2px solid var(--ox-bright);padding-left:14px;margin-top:18px}
 .rw-note strong{font-style:normal;color:var(--ox-bright);font-weight:500}
 
 .proof-compliance{
-  margin-top:clamp(40px,5.5vh,60px);
-  background:var(--card);border:1px solid var(--bone-10);border-radius:6px;
-  overflow:hidden;
+  margin-top:clamp(38px,5vh,56px);background:var(--card);
+  border:1px solid var(--bone-07);border-radius:6px;overflow:hidden;
 }
-.proof-compliance-header{
-  padding:clamp(20px,2.2vw,32px) clamp(20px,2.5vw,36px);
-  border-bottom:1px solid var(--bone-10);background:rgba(255,255,255,.02);
-}
-.proof-compliance-header h3{font-family:var(--sans);font-size:14.5px;font-weight:600;letter-spacing:.02em;color:var(--bone)}
-.proof-compliance-header p{font-size:13px;color:var(--bone-45);margin-top:6px}
+.pc-header{padding:clamp(18px,2.2vw,30px) clamp(20px,2.4vw,34px);border-bottom:1px solid var(--bone-07);background:rgba(255,255,255,.018)}
+.pc-header h3{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--bone)}
+.pc-header p{font-size:12.5px;color:var(--bone-55);margin-top:5px}
 .audit-rows{display:flex;flex-direction:column}
 .audit-row{
-  display:grid;grid-template-columns:2.2fr 1fr 2.2fr;gap:clamp(14px,2vw,28px);
-  padding:16px clamp(20px,2.5vw,36px);
-  border-top:1px solid var(--bone-10);align-items:baseline;
+  display:grid;grid-template-columns:2.2fr .95fr 2.4fr;gap:clamp(12px,2vw,28px);
+  padding:15px clamp(20px,2.4vw,34px);border-top:1px solid var(--bone-07);align-items:baseline;
   transition:background .2s;
 }
 .audit-row:hover{background:rgba(255,255,255,.02)}
-.audit-claim{font-size:13.5px;color:var(--bone-70);font-style:italic}
-.audit-verdict{
-  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-  padding:4px 10px;border-radius:20px;text-align:center;white-space:nowrap;width:fit-content;
-}
-.verdict-flag{background:var(--ox-glow);color:var(--ox-bright);border:1px solid rgba(192,68,58,.3)}
-.verdict-pass{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.verdict-rewrite{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
-.audit-why{font-size:13px;color:var(--bone-45);line-height:1.6}
-.audit-why strong{color:var(--bone-70);font-weight:500}
+.audit-claim{font-size:13px;color:var(--bone-80);font-style:italic}
+.audit-verdict{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;padding:4px 10px;border-radius:20px;text-align:center;white-space:nowrap;width:fit-content}
+.vf{background:var(--ox-glow);color:var(--ox-bright);border:1px solid rgba(192,68,58,.28)}
+.vp{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.vr{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.audit-why{font-size:12.5px;color:var(--bone-55);line-height:1.65}
+.audit-why strong{color:var(--bone-80);font-weight:500}
 
-/* ── OFFER ─────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   OFFER
+════════════════════════════════════════════════ */
 .offer{background:var(--carbon)}
-.offer h2{font-size:clamp(30px,4vw,56px);max-width:22ch;margin-top:12px;margin-bottom:clamp(12px,2vh,18px)}
-.offer-lead{font-size:clamp(14px,1.1vw,16px);color:var(--bone-45);max-width:58ch;margin-bottom:clamp(32px,5vh,48px);line-height:1.75}
-.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.8vw,20px);margin-bottom:clamp(20px,3vh,28px)}
+.offer h2{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-bottom:clamp(12px,2vh,16px)}
+.offer-lead{font-size:clamp(13.5px,1.1vw,16px);color:var(--bone-55);max-width:60ch;margin-bottom:clamp(30px,4.5vh,44px);line-height:1.8}
+.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.8vw,20px);margin-bottom:clamp(18px,2.8vh,26px)}
 .offer-card{
-  background:var(--card);border:1px solid var(--bone-10);border-radius:6px;
-  padding:clamp(22px,2.4vw,36px);display:flex;flex-direction:column;
-  transition:border-color .35s var(--ease),transform .35s var(--ease);
-  position:relative;
+  background:var(--card);border:1px solid var(--bone-07);border-radius:6px;
+  padding:clamp(22px,2.4vw,36px);display:flex;flex-direction:column;position:relative;
+  transition:border-color .35s var(--ease),transform .35s var(--ease),box-shadow .35s;
+  overflow:hidden;
 }
-.offer-card:hover{border-color:rgba(192,68,58,.4);transform:translateY(-3px)}
-.offer-card.featured{
-  border-color:rgba(192,68,58,.35);
-  background:linear-gradient(155deg,rgba(122,46,46,.14),var(--card) 55%);
+.offer-card::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(500px at var(--mx,50%) var(--my,50%),rgba(192,68,58,.09),transparent 70%);
+  opacity:0;transition:opacity .4s;pointer-events:none;
 }
-.featured-badge{
-  position:absolute;top:-1px;right:24px;
-  font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;
-  background:var(--ox-bright);color:var(--bone);
-  padding:5px 12px;border-radius:0 0 4px 4px;
-}
-.offer-num{font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--bone-20);margin-bottom:18px;display:block}
-.offer-card h3{font-family:var(--serif);font-size:clamp(20px,1.9vw,28px);font-weight:600;color:var(--bone);margin-bottom:9px}
-.offer-card .tagline{font-size:13px;color:var(--bone-45);margin-bottom:20px;line-height:1.65}
-.offer-deliverables{list-style:none;margin-bottom:22px;flex:1}
-.offer-deliverables li{
-  font-size:12.5px;color:var(--bone-45);padding:9px 0;
-  border-top:1px solid var(--bone-10);
-  display:flex;gap:9px;align-items:baseline;line-height:1.55;
-}
-.offer-deliverables li::before{content:"→";color:var(--ox-bright);flex-shrink:0;font-size:11px}
-.offer-price{margin-top:auto;padding-top:18px;border-top:1px solid var(--bone-10);display:flex;align-items:baseline;gap:7px}
-.price-amount{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--bone)}
-.price-note{font-size:12px;color:var(--bone-45);letter-spacing:.04em}
-.offer-timeline{font-size:10.5px;color:var(--ox-bright);letter-spacing:.16em;text-transform:uppercase;margin-top:7px}
-
+.offer-card:hover::before{opacity:1}
+.offer-card:hover{border-color:rgba(192,68,58,.35);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.offer-card.featured{border-color:rgba(192,68,58,.28);background:linear-gradient(155deg,rgba(122,46,46,.12),var(--card) 55%)}
+.feat-badge{position:absolute;top:-1px;right:22px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;background:var(--ox-bright);color:var(--bone);padding:5px 12px;border-radius:0 0 4px 4px}
+.offer-num{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--bone-30);margin-bottom:16px;display:block}
+.offer-card h3{font-family:var(--serif);font-size:clamp(20px,1.9vw,28px);font-weight:600;color:var(--bone);margin-bottom:8px}
+.offer-card .tagline{font-size:13px;color:var(--bone-55);margin-bottom:18px;line-height:1.65}
+.offer-dl{list-style:none;margin-bottom:20px;flex:1}
+.offer-dl li{font-size:12.5px;color:var(--bone-55);padding:8px 0;border-top:1px solid var(--bone-07);display:flex;gap:8px;align-items:baseline;line-height:1.55}
+.offer-dl li::before{content:"→";color:var(--ox-bright);flex-shrink:0;font-size:10.5px}
+.offer-price{margin-top:auto;padding-top:16px;border-top:1px solid var(--bone-07);display:flex;align-items:baseline;gap:7px}
+.price-n{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--bone)}
+.price-m{font-size:12px;color:var(--bone-55)}
+.offer-tl{font-size:10px;color:var(--ox-bright);letter-spacing:.16em;text-transform:uppercase;margin-top:6px}
 .audit-callout{
-  padding:clamp(22px,2.8vw,38px) clamp(22px,2.8vw,42px);
-  background:var(--ox-glow);border:1px solid rgba(192,68,58,.25);border-radius:6px;
-  display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;
+  padding:clamp(20px,2.8vw,36px) clamp(20px,2.8vw,40px);
+  background:var(--ox-glow);border:1px solid rgba(192,68,58,.22);border-radius:6px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
 }
-.audit-callout-text h3{font-family:var(--sans);font-size:15.5px;font-weight:600;color:var(--bone);margin-bottom:7px;letter-spacing:.01em}
-.audit-callout-text p{font-size:13.5px;color:var(--bone-45);max-width:48ch;line-height:1.65}
-.audit-callout-text p strong{color:var(--bone-70);font-weight:500}
+.ac-text h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--bone);margin-bottom:6px}
+.ac-text p{font-size:13.5px;color:var(--bone-55);max-width:50ch;line-height:1.65}
+.ac-text p strong{color:var(--bone-80);font-weight:500}
 
-/* ── FAQ ───────────────────────────────────── */
-.faq h2{font-size:clamp(30px,4vw,56px);max-width:22ch;margin-top:12px;margin-bottom:clamp(36px,5.5vh,56px)}
-.faq-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--bone-10);border-radius:6px;overflow:hidden}
-.faq-item{border-top:1px solid var(--bone-10)}
+/* ═══════════════════════════════════════════════
+   FAQ
+════════════════════════════════════════════════ */
+.faq h2{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-bottom:clamp(34px,5.5vh,52px)}
+.faq-list{display:flex;flex-direction:column;border:1px solid var(--bone-07);border-radius:6px;overflow:hidden}
+.faq-item{border-top:1px solid var(--bone-07)}
 .faq-item:first-child{border-top:none}
 .faq-q{
   width:100%;background:none;border:none;cursor:pointer;
   display:flex;align-items:center;justify-content:space-between;gap:20px;
-  padding:clamp(18px,2vw,26px) clamp(20px,2.5vw,36px);
-  text-align:left;transition:background .2s;
+  padding:clamp(17px,2vw,24px) clamp(20px,2.4vw,34px);text-align:left;
+  transition:background .22s;
 }
-.faq-q:hover{background:rgba(255,255,255,.025)}
+.faq-q:hover{background:rgba(255,255,255,.02)}
 .faq-q.open{background:rgba(192,68,58,.04)}
-.faq-q-text{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--bone);line-height:1.4}
+.faq-q-t{font-family:var(--sans);font-size:14.5px;font-weight:500;color:var(--bone);line-height:1.4}
 .faq-icon{
   flex-shrink:0;width:22px;height:22px;border-radius:50%;
-  border:1px solid var(--bone-20);
-  display:flex;align-items:center;justify-content:center;
-  transition:border-color .25s,background .25s,transform .35s var(--ease);
-  color:var(--bone-45);font-size:14px;line-height:1;
+  border:1px solid var(--bone-30);display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--bone-55);line-height:1;
+  transition:border-color .25s,background .25s,color .25s,transform .38s var(--ease);
 }
 .faq-q.open .faq-icon{border-color:var(--ox-bright);background:var(--ox-glow);color:var(--ox-bright);transform:rotate(45deg)}
-.faq-a{
-  max-height:0;overflow:hidden;
-  transition:max-height .45s var(--ease),padding .35s var(--ease);
-  padding:0 clamp(20px,2.5vw,36px);
-}
-.faq-a.open{max-height:600px;padding:0 clamp(20px,2.5vw,36px) clamp(18px,2.5vh,28px)}
-.faq-a p{font-size:14px;color:var(--bone-45);line-height:1.75}
-.faq-a p strong{color:var(--bone-70);font-weight:500}
-.faq-a p+p{margin-top:12px}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease),padding .38s var(--ease)}
+.faq-a.open{max-height:700px;padding-bottom:clamp(16px,2.5vh,26px)}
+.faq-a-inner{padding:0 clamp(20px,2.4vw,34px)}
+.faq-a p{font-size:13.5px;color:var(--bone-55);line-height:1.78}
+.faq-a p+p{margin-top:11px}
+.faq-a p strong{color:var(--bone-80);font-weight:500}
 
-/* ── CONTACT FORM ──────────────────────────── */
+/* ═══════════════════════════════════════════════
+   CONTACT
+════════════════════════════════════════════════ */
 .contact-section{background:var(--carbon)}
-.contact-section h2{font-size:clamp(30px,4vw,56px);max-width:22ch;margin-top:12px;margin-bottom:clamp(12px,2vh,16px)}
+.contact-section h2{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-bottom:clamp(10px,2vh,14px)}
 .contact-section h2 em{font-style:italic;color:var(--ox-bright)}
-.contact-lead{font-size:clamp(14px,1.1vw,16px);color:var(--bone-45);max-width:52ch;margin-bottom:clamp(36px,5vh,52px);line-height:1.75}
-.contact-lead strong{color:var(--bone-70);font-weight:500}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,60px);align-items:start}
-.contact-form-wrap{
-  background:var(--card);border:1px solid var(--bone-10);border-radius:6px;
-  padding:clamp(26px,3vw,44px);
-}
+.contact-lead{font-size:clamp(13.5px,1.1vw,16px);color:var(--bone-55);max-width:54ch;margin-bottom:clamp(32px,5vh,48px);line-height:1.8}
+.contact-lead strong{color:var(--bone-80);font-weight:500}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:start}
+.contact-form-wrap{background:var(--card);border:1px solid var(--bone-07);border-radius:6px;padding:clamp(24px,3vw,42px);position:relative;overflow:hidden}
 
-/* form */
-form{display:flex;flex-direction:column;gap:18px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.field{display:flex;flex-direction:column;gap:7px}
-.field label{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--bone-45)}
+/* multi-step form */
+.form-steps-indicator{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.fsi-dot{width:8px;height:8px;border-radius:50%;background:var(--bone-15);transition:background .3s,transform .3s var(--ease-spring)}
+.fsi-dot.active{background:var(--ox-bright);transform:scale(1.3)}
+.fsi-dot.done{background:var(--green)}
+.fsi-line{flex:1;height:1px;background:var(--bone-07)}
+.fsi-label{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--bone-30);margin-left:6px}
+
+.form-step{display:none}
+.form-step.active{display:flex;flex-direction:column;gap:16px}
+form{display:flex;flex-direction:column;gap:0}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--bone-55)}
 .field input,.field select,.field textarea{
-  background:var(--ink);
-  border:1px solid var(--bone-10);border-radius:3px;
+  background:var(--ink);border:1px solid var(--bone-15);border-radius:3px;
   color:var(--bone);font-family:var(--sans);font-size:14px;
-  padding:13px 15px;
-  transition:border-color .22s,box-shadow .22s;
-  outline:none;
-  -webkit-appearance:none;appearance:none;
-  width:100%;
+  padding:12px 14px;transition:border-color .22s,box-shadow .22s;outline:none;
+  -webkit-appearance:none;appearance:none;width:100%;
 }
-.field input::placeholder,.field textarea::placeholder{color:var(--bone-20)}
-.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(232,226,214,0.35)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;cursor:pointer}
+.field input::placeholder,.field textarea::placeholder{color:var(--bone-30)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(232,226,214,.3)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;cursor:pointer}
 .field select option{background:#1a1816}
-.field textarea{resize:vertical;min-height:110px;line-height:1.65}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(192,68,58,.55);box-shadow:0 0 0 3px rgba(192,68,58,.08)}
-.field.error input,.field.error select,.field.error textarea{border-color:rgba(192,68,58,.7)}
-.field-err{font-size:11.5px;color:var(--ox-bright);margin-top:2px;display:none}
-.field.error .field-err{display:block}
+.field textarea{resize:vertical;min-height:100px;line-height:1.65}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(192,68,58,.5);box-shadow:0 0 0 3px rgba(192,68,58,.07)}
+.field.err input,.field.err select,.field.err textarea{border-color:rgba(192,68,58,.65)}
+.ferr{font-size:11px;color:var(--ox-bright);display:none;margin-top:2px}
+.field.err .ferr{display:block}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
-.form-submit-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:4px}
-.form-note{font-size:11.5px;color:var(--bone-20)}
+.form-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+.step-note{font-size:11px;color:var(--bone-30)}
 
-/* success state */
-.form-success{
-  display:none;flex-direction:column;align-items:center;text-align:center;
-  gap:18px;padding:clamp(30px,4vw,50px) 20px;
-}
+/* form success */
+.form-success{display:none;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:clamp(28px,4vw,48px) 20px}
 .form-success.show{display:flex}
-.success-icon{
-  width:54px;height:54px;border-radius:50%;
-  border:1px solid var(--green-border);background:var(--green-bg);
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;
-}
-.form-success h3{font-family:var(--serif);font-size:clamp(24px,2.4vw,32px);color:var(--bone);font-weight:600}
-.form-success p{font-size:14px;color:var(--bone-45);max-width:34ch;line-height:1.7}
+.success-icon{width:52px;height:52px;border-radius:50%;border:1px solid var(--green-border);background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:20px;animation:popIn .6s var(--ease-spring)}
+@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
+.form-success h3{font-family:var(--serif);font-size:clamp(22px,2.2vw,30px);color:var(--bone);font-weight:600}
+.form-success p{font-size:13.5px;color:var(--bone-55);max-width:32ch;line-height:1.7}
 
-/* contact aside */
-.contact-aside{display:flex;flex-direction:column;gap:28px}
-.aside-block{padding:clamp(20px,2.2vw,32px);background:var(--card);border:1px solid var(--bone-10);border-radius:6px}
-.aside-block h3{font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--bone-70);margin-bottom:14px}
-.aside-list{display:flex;flex-direction:column;gap:10px;list-style:none}
-.aside-list li{font-size:13.5px;color:var(--bone-45);display:flex;gap:10px;align-items:baseline;line-height:1.55}
-.aside-list li::before{content:"→";color:var(--ox-bright);font-size:11px;flex-shrink:0}
-.aside-list li strong{color:var(--bone-70);font-weight:500}
-.aside-guarantee{
-  padding:clamp(20px,2.2vw,32px);
-  background:var(--ox-glow);
-  border:1px solid rgba(192,68,58,.25);border-radius:6px;
-}
-.aside-guarantee h3{font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ox-bright);margin-bottom:12px}
-.aside-guarantee p{font-size:13.5px;color:var(--bone-45);line-height:1.7}
-.aside-guarantee p strong{color:var(--bone-70);font-weight:500}
+/* aside */
+.contact-aside{display:flex;flex-direction:column;gap:20px}
+.aside-block{padding:clamp(18px,2vw,28px);background:var(--card);border:1px solid var(--bone-07);border-radius:6px}
+.aside-block h3{font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-80);margin-bottom:14px}
+.aside-list{display:flex;flex-direction:column;gap:9px;list-style:none}
+.aside-list li{font-size:13px;color:var(--bone-55);display:flex;gap:9px;align-items:baseline;line-height:1.55}
+.aside-list li::before{content:"→";color:var(--ox-bright);font-size:10.5px;flex-shrink:0}
+.aside-list li strong{color:var(--bone-80);font-weight:500}
+.aside-guarantee{padding:clamp(18px,2vw,28px);background:var(--ox-glow);border:1px solid rgba(192,68,58,.22);border-radius:6px}
+.aside-guarantee h3{font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ox-bright);margin-bottom:11px}
+.aside-guarantee p{font-size:13px;color:var(--bone-55);line-height:1.7}
+.aside-guarantee p strong{color:var(--bone-80);font-weight:500}
 
-/* ── FOOTER ────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════════ */
 footer{
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
-  padding:26px clamp(20px,5vw,60px);
-  border-top:1px solid var(--bone-10);
-  font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-20);
+  padding:24px clamp(20px,5vw,60px);border-top:1px solid var(--bone-07);
+  font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-30);
 }
 footer a{transition:color .22s}
-footer a:hover{color:var(--bone-45)}
+footer a:hover{color:var(--bone-55)}
 
-/* ── RESPONSIVE ────────────────────────────── */
-@media (max-width:960px){
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════ */
+@media (max-width:980px){
   .contact-grid{grid-template-columns:1fr}
   .contact-aside{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 }
-@media (max-width:800px){
-  .pain-grid,.solution-grid,.process-steps,.offer-grid{grid-template-columns:1fr}
-  .process-steps::before{display:none}
-  .step{padding:0}
-  .step+.step{padding-top:28px;border-top:1px solid var(--bone-10);margin-top:28px}
-  .rewrite-body{grid-template-columns:1fr}
-  .rw-pane+.rw-pane{border-left:none;border-top:1px solid var(--bone-10)}
+@media (max-width:820px){
+  .stats-grid,.pain-grid,.sol-grid,.proc-steps,.offer-grid{grid-template-columns:1fr}
+  .proc-steps::before{display:none}
+  .proc-step+.proc-step{padding-top:26px;border-top:1px solid var(--bone-07);margin-top:26px}
+  .proc-step{padding:0}
   .audit-row{grid-template-columns:1fr;gap:6px}
   .audit-verdict{display:inline-block}
-  .form-row{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
   .nav-links{display:none}
   .hamburger{display:flex}
   .contact-aside{grid-template-columns:1fr}
 }
 @media (max-width:540px){
-  .hero-trust{flex-direction:column;align-items:flex-start;gap:10px}
-  .trust-sep{display:none}
-  .cta-group{flex-direction:column;align-items:stretch}
-  .cta-group .btn-primary,.cta-group .btn-ghost{justify-content:center}
+  .hero-trust{flex-direction:column;align-items:flex-start;gap:9px}
+  .ts{display:none}
+  .cta-grp{flex-direction:column;align-items:stretch}
+  .cta-grp .btn-p,.cta-grp .btn-s{justify-content:center;text-align:center}
   .audit-callout{flex-direction:column}
-  .form-submit-row{flex-direction:column;align-items:stretch}
-  #sticky-bar .btn-primary{width:100%;justify-content:center}
+  #sticky-bar{flex-direction:column;align-items:flex-start}
+  .rw-tabs{flex-wrap:wrap}
 }
 @media (prefers-reduced-motion:reduce){
-  [data-reveal],[data-reveal-fade]{opacity:1;transform:none;transition:none}
+  body{animation:none;opacity:1}
+  .h-word{animation:none;opacity:1;transform:none}
+  .hero-sub,.cta-grp,.hero-trust,.scroll-cue{animation:none;opacity:1;transform:none}
+  [data-reveal]{opacity:1;transform:none;transition:none}
   .faq-a{transition:none}
+  .ticker-track{animation:none}
 }
 </style>
 </head>
 <body>
 
+<!-- Cursor -->
+<div class="c-dot" id="cdot"></div>
+<div class="c-ring" id="cring"></div>
+
 <!-- Progress bar -->
-<div id="progress"><div id="progress-fill"></div></div>
+<div id="progress"><div id="pfill"></div></div>
+
+<!-- Ticker -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker-track">
+    <span>FTC Structure/Function Rules</span><span class="sep">·</span>
+    <span>Meta Health Claims Policy</span><span class="sep">·</span>
+    <span>DSHEA Compliance</span><span class="sep">·</span>
+    <span>TikTok Health Advertising</span><span class="sep">·</span>
+    <span>Primary Literature Review</span><span class="sep">·</span>
+    <span>Mechanism-First Copy</span><span class="sep">·</span>
+    <span>Cold Traffic Conversion</span><span class="sep">·</span>
+    <span>Supplements · NMN · Longevity · Nootropics · Testosterone · Sleep</span><span class="sep">·</span>
+    <span>FTC Structure/Function Rules</span><span class="sep">·</span>
+    <span>Meta Health Claims Policy</span><span class="sep">·</span>
+    <span>DSHEA Compliance</span><span class="sep">·</span>
+    <span>TikTok Health Advertising</span><span class="sep">·</span>
+    <span>Primary Literature Review</span><span class="sep">·</span>
+    <span>Mechanism-First Copy</span><span class="sep">·</span>
+    <span>Cold Traffic Conversion</span><span class="sep">·</span>
+    <span>Supplements · NMN · Longevity · Nootropics · Testosterone · Sleep</span><span class="sep">·</span>
+  </div>
+</div>
 
 <!-- Nav -->
 <nav id="nav">
@@ -588,78 +642,124 @@ footer a:hover{color:var(--bone-45)}
     <a class="nav-link" href="#faq">FAQ</a>
     <a class="nav-cta" href="#contact">Get a Free Audit</a>
   </div>
-  <button class="hamburger" id="hamburger" aria-label="Menu">
+  <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
-
 <div class="mobile-drawer" id="mobile-drawer">
-  <a href="#proof" class="drawer-link">See the work</a>
-  <a href="#services" class="drawer-link">Pricing</a>
-  <a href="#faq" class="drawer-link">FAQ</a>
+  <a href="#proof">See the work</a>
+  <a href="#services">Pricing</a>
+  <a href="#faq">FAQ</a>
   <a href="#contact" class="m-cta">Get a Free Audit</a>
 </div>
 
 <!-- Sticky bar -->
 <div id="sticky-bar">
-  <p class="sticky-text"><strong>Free 24-hour funnel review</strong> — send me your landing page and I'll show you exactly what's leaking conversions and what's risking a ban.</p>
-  <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
-    <a class="btn-primary" href="#contact" style="padding:13px 26px;font-size:11px">Claim it <span class="arrow">→</span></a>
-    <button class="sticky-dismiss" id="sticky-dismiss">Dismiss</button>
+  <p class="sb-text"><strong>Free 24-hour funnel review</strong> — send me your page and I'll tell you exactly what's leaking conversions and what risks a ban.</p>
+  <div class="sb-actions">
+    <a class="btn-p" href="#contact" style="padding:12px 24px;font-size:11px">Claim it <span class="arr">→</span></a>
+    <button class="sb-dismiss" id="sb-dismiss">Dismiss</button>
   </div>
 </div>
 
 
-<!-- ═══════════════════════════════════════════
-     1. HERO
-════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════
+     HERO
+════════════════════════════════════ -->
 <section class="hero" id="top">
+  <div class="hero-bg" id="hero-bg"></div>
   <div class="shell">
-    <div class="label" data-reveal>Medical-authority copy studio</div>
-    <h1 data-reveal>Your health copy is leaking revenue — <em>and possibly liability.</em></h1>
-    <p class="hero-sub" data-reveal>
+    <div class="label">Medical-authority copy studio</div>
+    <h1>
+      <span class="h-line">
+        <span class="h-word" style="animation-delay:.15s">Your</span>&nbsp;<span class="h-word" style="animation-delay:.24s">health</span>&nbsp;<span class="h-word" style="animation-delay:.33s">copy</span>&nbsp;<span class="h-word" style="animation-delay:.42s">is</span>
+      </span>
+      <span class="h-line">
+        <span class="h-word" style="animation-delay:.52s">leaking</span>&nbsp;<span class="h-word" style="animation-delay:.62s">revenue</span>&nbsp;<span class="h-word" style="animation-delay:.72s">—</span>
+      </span>
+      <span class="h-line">
+        <em><span class="h-word" style="animation-delay:.86s">and</span>&nbsp;<span class="h-word" style="animation-delay:.95s">possibly</span>&nbsp;<span class="h-word" style="animation-delay:1.04s">liability.</span></em>
+      </span>
+    </h1>
+    <p class="hero-sub">
       Most supplement copy either <strong>gets flagged by Meta and the FTC</strong> or gets watered down until it converts nobody.
       I write the third kind: claims built on what the evidence actually says, structured to sell cold, skeptical traffic.
     </p>
-    <div class="cta-group" data-reveal>
-      <a class="btn-primary" href="#contact">Get my free funnel audit <span class="arrow">→</span></a>
-      <a class="btn-secondary" href="#proof">See before/after rewrites</a>
+    <div class="cta-grp">
+      <a class="btn-p" href="#contact">Get my free funnel audit <span class="arr">→</span></a>
+      <a class="btn-s" href="#proof">See before/after rewrites</a>
     </div>
-    <div class="hero-trust" data-reveal>
-      <span class="trust-item"><strong>Medically trained</strong> writer</span>
-      <span class="trust-sep"></span>
-      <span class="trust-item">FTC &amp; <strong>Meta compliance</strong> built in</span>
-      <span class="trust-sep"></span>
-      <span class="trust-item"><strong>Supplements &amp; longevity</strong> brands only</span>
-      <span class="trust-sep"></span>
-      <span class="trust-item">Free <strong>funnel audit</strong> in 24 hours</span>
+    <div class="hero-trust">
+      <span class="ti"><strong>Medically trained</strong> writer</span>
+      <span class="ts"></span>
+      <span class="ti">FTC &amp; <strong>Meta compliance</strong> built in</span>
+      <span class="ts"></span>
+      <span class="ti"><strong>Supplements &amp; longevity</strong> only</span>
+      <span class="ts"></span>
+      <span class="ti">Free <strong>funnel review</strong> in 24 hours</span>
     </div>
   </div>
+  <div class="scroll-cue">Scroll</div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════
-     2. PROBLEM
-════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════
+     STATS
+════════════════════════════════════ -->
+<div class="stats">
+  <div class="shell">
+    <div class="stats-grid">
+      <div class="stat" data-reveal>
+        <span class="stat-num"><span class="counter" data-target="3">0</span></span>
+        <span class="stat-label">Compliance layers checked on every piece — FTC, Meta, and DSHEA</span>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat-num"><span class="counter" data-target="48">0</span><span class="unit">hr</span></span>
+        <span class="stat-label">Maximum turnaround on a compliance &amp; conversion audit</span>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat-num"><sup>100</sup>%</span>
+        <span class="stat-label">Focus on health, supplement, and longevity brands — nothing else</span>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat-num"><span class="counter" data-target="5">0</span><span class="unit">+</span></span>
+        <span class="stat-label">Claim categories tracked: FTC · Meta · TikTok · DSHEA · FDA S/F</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ECG divider -->
+<div class="ecg-wrap" data-ecg>
+  <svg class="ecg" viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,25 L380,25 L408,25 L422,10 L440,40 L458,5 L476,38 L490,25 L520,25 L1440,25"/>
+  </svg>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PROBLEM
+════════════════════════════════════ -->
 <section class="problem">
   <div class="shell">
     <div class="label" data-reveal>Why your copy isn't converting</div>
     <h2 data-reveal>Three problems that kill supplement funnels</h2>
     <div class="pain-grid">
-      <div class="pain" data-reveal>
+      <div class="pain glow-card" data-reveal>
         <span class="pain-num">01</span>
         <h3>Your copywriter has never read a clinical trial</h3>
         <p>They borrowed your claims from competitor pages and dressed them up. No mechanism. No evidence trail. <strong>Just vague benefit language that doesn't survive a skeptical buyer.</strong> Cold traffic doesn't convert on "supports healthy energy."</p>
       </div>
-      <div class="pain" data-reveal>
+      <div class="pain glow-card" data-reveal>
         <span class="pain-num">02</span>
         <h3>Your compliance pass strips the persuasion</h3>
         <p>Your lawyer replaces every specific claim with "may support" and "as part of a healthy lifestyle." <strong>The copy that survives review offends no one — and moves no one.</strong> Your CAC climbs while your page says functionally nothing.</p>
       </div>
-      <div class="pain" data-reveal>
+      <div class="pain glow-card" data-reveal>
         <span class="pain-num">03</span>
         <h3>One sentence away from a banned ad account</h3>
-        <p>Meta flags implied disease claims, before/after structure, and certain mechanism language — in ways most copywriters can't predict. <strong>One banned campaign can cost weeks of revenue</strong> while you wait in the appeals queue.</p>
+        <p>Meta flags implied disease claims, before/after structure, and certain mechanism language in ways most writers can't predict. <strong>One banned campaign costs weeks of revenue</strong> while you wait in the appeals queue.</p>
       </div>
     </div>
     <div class="problem-truth" data-reveal>
@@ -669,90 +769,111 @@ footer a:hover{color:var(--bone-45)}
 </section>
 
 
-<!-- ═══════════════════════════════════════════
-     3. SOLUTION
-════════════════════════════════════════════ -->
+<!-- ECG divider -->
+<div class="ecg-wrap" data-ecg>
+  <svg class="ecg" viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,25 L600,25 L628,25 L642,10 L660,40 L678,5 L696,38 L710,25 L740,25 L1440,25"/>
+  </svg>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     SOLUTION
+════════════════════════════════════ -->
 <section class="solution">
   <div class="shell">
     <div class="label" data-reveal>What makes this different</div>
     <h2 data-reveal>The gap between "compliant" and "converts" is where I work</h2>
     <p class="solution-lead" data-reveal>
-      I trained in medicine — reading actual clinical literature, understanding dosing, endpoints, and what the evidence can and cannot support. Then I trained in direct-response copywriting. <strong>That combination does not exist at a typical agency or freelance marketplace.</strong>
+      I trained in medicine — reading actual clinical literature, understanding dosing, endpoints, and what the evidence can and cannot support. Then I trained in direct-response copywriting.
+      <strong>That combination does not exist at a typical agency or freelance marketplace.</strong>
     </p>
-    <div class="solution-grid">
-      <div class="sol-card" data-reveal>
+    <div class="sol-grid">
+      <div class="sol-card glow-card" data-reveal>
         <span class="sol-icon">The medical layer</span>
         <h3>I read the primary literature before I write a word</h3>
         <p>Every mechanism claim is traced to its source trial — dose, endpoint, population, effect size. I know exactly what "clinically studied" means and what it doesn't. <strong>You get copy that's specific because the evidence is specific,</strong> not because a copywriter made it sound that way.</p>
       </div>
-      <div class="sol-card" data-reveal>
+      <div class="sol-card glow-card" data-reveal>
         <span class="sol-icon">The direct-response layer</span>
-        <h3>Every page is structured around one job: converting cold traffic</h3>
-        <p>Mechanism-first copy — explaining <em>why</em> it works, not just claiming that it does — eliminates the comparison shopper. A buyer who understands the biology stops comparing you on price. <strong>That's not a branding play. It's a conversion strategy.</strong></p>
+        <h3>Every page is structured to convert cold, skeptical traffic</h3>
+        <p>Mechanism-first copy explains <em>why</em> it works, not just that it does — and it eliminates the comparison shopper. A buyer who understands the biology stops comparing you on price. <strong>That's not a branding play. It's a conversion strategy.</strong></p>
       </div>
-      <div class="sol-card" data-reveal>
+      <div class="sol-card glow-card" data-reveal>
         <span class="sol-icon">The compliance layer</span>
         <h3>Built to survive Meta, TikTok, and FTC review — without a lawyer rewrite</h3>
-        <p>I structure claims as mechanism explanations, not disease treatments. I avoid implied before/after in ad copy. <strong>Ship once — no rounds of compliance revision stripping out what made the copy work.</strong> Scaling is a copy problem before it's a media problem.</p>
+        <p>Claims structured as mechanism explanations, not disease treatments. No implied before/after in ad copy. <strong>Ship once — no compliance revision rounds stripping out what made the copy work.</strong> Scaling is a copy problem before it's a media problem.</p>
       </div>
-      <div class="sol-card" data-reveal>
+      <div class="sol-card glow-card" data-reveal>
         <span class="sol-icon">The specialist constraint</span>
         <h3>Health and supplement brands only — not one other industry</h3>
-        <p>I don't write SaaS or fashion copy. <strong>This specialization means I already know your buyer's objections, the competitive claims in your category, and the regulatory lines specific to your product type.</strong> You don't pay me to get up to speed.</p>
+        <p>I don't write SaaS or fashion copy. <strong>This specialization means I already know your buyer's objections, your category's competitive claims, and the exact regulatory lines for your product type.</strong> You don't pay me to get up to speed.</p>
       </div>
     </div>
   </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════
-     4. PROCESS
-════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════
+     PROCESS
+════════════════════════════════════ -->
 <section class="process">
   <div class="shell">
     <div class="label" data-reveal>How it works</div>
-    <h2 data-reveal>Three steps from inquiry to compliant, converting copy</h2>
-    <div class="process-steps">
-      <div class="step" data-reveal>
-        <div class="step-num">1</div>
+    <h2 data-reveal>From first email to compliant, converting copy</h2>
+    <div class="proc-steps">
+      <div class="proc-step" data-reveal>
+        <div class="proc-num">1</div>
         <h3>Send me your funnel</h3>
-        <p>Share your current landing page, email sequence, ad creative — whatever you have. <strong>No sales call required first.</strong> Fill out the form below and I'll take it from there.</p>
+        <p>Share your current landing page, email sequence, or ad creative. <strong>No sales call required first.</strong> Fill in the form below and I'll take it from there in 24 hours.</p>
       </div>
-      <div class="step" data-reveal>
-        <div class="step-num">2</div>
-        <h3>I audit it within 24 hours</h3>
-        <p>You get a marked-up breakdown: every compliance risk flagged, every conversion leak named, every weak claim annotated with <strong>the evidence that could replace it.</strong></p>
+      <div class="proc-step" data-reveal>
+        <div class="proc-num">2</div>
+        <h3>I audit it in 24 hours</h3>
+        <p>You get a marked-up breakdown: every compliance risk flagged, every conversion leak named, every weak claim annotated with <strong>the evidence that could replace it.</strong> Free.</p>
       </div>
-      <div class="step" data-reveal>
-        <div class="step-num">3</div>
-        <h3>We scope the project — or you take the audit and go</h3>
-        <p>No obligation to continue. <strong>The audit is useful on its own.</strong> If we move forward, you'll have clear deliverables, a fixed price, and a turnaround date in writing before I start.</p>
+      <div class="proc-step" data-reveal>
+        <div class="proc-num">3</div>
+        <h3>We scope the work — or you take the audit and go</h3>
+        <p>No obligation to continue. <strong>The audit is useful on its own.</strong> If we work together, you get fixed scope, fixed price, and a delivery date in writing before I start.</p>
       </div>
     </div>
   </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════
-     5. PROOF
-════════════════════════════════════════════ -->
+<!-- ECG divider -->
+<div class="ecg-wrap" data-ecg>
+  <svg class="ecg" viewBox="0 0 1440 50" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,25 L900,25 L928,25 L942,10 L960,40 L978,5 L996,38 L1010,25 L1040,25 L1440,25"/>
+  </svg>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PROOF
+════════════════════════════════════ -->
 <section class="proof" id="proof">
   <div class="shell">
     <div class="label" data-reveal>Proof of method</div>
-    <h2 data-reveal>Before/after rewrites — same product, entirely different result</h2>
+    <h2 data-reveal>Before/after rewrites — click to toggle</h2>
     <div class="rewrites">
 
       <div class="rewrite" data-reveal>
-        <div class="rewrite-header">
-          <span class="rewrite-product">NMN / NAD+ Supplement — Hero Headline</span>
-          <span class="rewrite-tag">Mechanism claim</span>
+        <div class="rw-header">
+          <span class="rw-product">NMN / NAD+ Supplement — Hero Headline</span>
+          <span class="rw-tag">Mechanism claim</span>
         </div>
-        <div class="rewrite-body">
+        <div class="rw-tabs">
+          <button class="rw-tab" data-pane="before">Before</button>
+          <button class="rw-tab active" data-pane="after">After (LUMEN)</button>
+        </div>
+        <div class="rw-panes">
           <div class="rw-pane before">
             <span class="rw-label">What the category writes</span>
             <p class="rw-copy">"Boost your energy and feel younger with clinically proven NMN."</p>
           </div>
-          <div class="rw-pane after">
+          <div class="rw-pane after active">
             <span class="rw-label">LUMEN rewrite</span>
             <p class="rw-copy">"Your cells have a recycling system. After 30, it slows. NMN is the only compound studied in humans to restart it."</p>
             <p class="rw-note"><strong>Why it converts better:</strong> Names the mechanism (NAD+ salvage pathway), introduces age-related decline as the villain, positions the product as the specific solution — without claiming to "cure" anything. Passes FTC structure review.</p>
@@ -761,16 +882,20 @@ footer a:hover{color:var(--bone-45)}
       </div>
 
       <div class="rewrite" data-reveal>
-        <div class="rewrite-header">
-          <span class="rewrite-product">Magnesium Glycinate — Email Subject Line</span>
-          <span class="rewrite-tag">Sleep / recovery angle</span>
+        <div class="rw-header">
+          <span class="rw-product">Magnesium Glycinate — Email Subject Line</span>
+          <span class="rw-tag">Sleep / recovery angle</span>
         </div>
-        <div class="rewrite-body">
+        <div class="rw-tabs">
+          <button class="rw-tab" data-pane="before">Before</button>
+          <button class="rw-tab active" data-pane="after">After (LUMEN)</button>
+        </div>
+        <div class="rw-panes">
           <div class="rw-pane before">
             <span class="rw-label">What the category writes</span>
             <p class="rw-copy">"Support deep sleep and wake up refreshed with our magnesium blend."</p>
           </div>
-          <div class="rw-pane after">
+          <div class="rw-pane after active">
             <span class="rw-label">LUMEN rewrite</span>
             <p class="rw-copy">"Waking up at 3am isn't insomnia. It's your GABA receptors — and magnesium is the one mineral that binds them."</p>
             <p class="rw-note"><strong>Why it converts better:</strong> Reframes the symptom as a mechanism (GABA binding), neutralizing the "I've tried magnesium before" objection. Receptor-level language signals authority without requiring a disease claim.</p>
@@ -779,19 +904,23 @@ footer a:hover{color:var(--bone-45)}
       </div>
 
       <div class="rewrite" data-reveal>
-        <div class="rewrite-header">
-          <span class="rewrite-product">Testosterone Support Supplement — VSL Open</span>
-          <span class="rewrite-tag">High-risk claim category</span>
+        <div class="rw-header">
+          <span class="rw-product">Testosterone Support Supplement — VSL Open</span>
+          <span class="rw-tag">High-risk claim category</span>
         </div>
-        <div class="rewrite-body">
+        <div class="rw-tabs">
+          <button class="rw-tab" data-pane="before">Before</button>
+          <button class="rw-tab active" data-pane="after">After (LUMEN)</button>
+        </div>
+        <div class="rw-panes">
           <div class="rw-pane before">
             <span class="rw-label">What the category writes</span>
             <p class="rw-copy">"Clinically proven to boost testosterone levels by up to 45% in just 12 weeks."</p>
           </div>
-          <div class="rw-pane after">
+          <div class="rw-pane after active">
             <span class="rw-label">LUMEN rewrite</span>
             <p class="rw-copy">"A 2021 trial in the Journal of the International Society of Sports Nutrition found men over 40 who took 300mg of ashwagandha daily had measurably higher testosterone at 12 weeks versus placebo."</p>
-            <p class="rw-note"><strong>Why it converts better:</strong> Cites the real study (dose, population, timeframe, publication) instead of a vague "clinically proven" claim that invites FTC scrutiny. More specific = more credible to skeptical buyers. Ad-safe.</p>
+            <p class="rw-note"><strong>Why it converts better:</strong> Cites the real study (dose, population, timeframe, publication) instead of a vague "clinically proven" claim. More specific = more credible to skeptical buyers. Ad-safe on Meta and TikTok.</p>
           </div>
         </div>
       </div>
@@ -799,35 +928,35 @@ footer a:hover{color:var(--bone-45)}
     </div>
 
     <div class="proof-compliance" data-reveal>
-      <div class="proof-compliance-header">
+      <div class="pc-header">
         <h3>Compliance audit table — claims that kill ad accounts and why</h3>
         <p>These are the patterns I check for in every piece before it ships.</p>
       </div>
       <div class="audit-rows">
         <div class="audit-row">
           <span class="audit-claim">"Clinically proven to boost testosterone"</span>
-          <span class="audit-verdict verdict-flag">FTC Flag</span>
+          <span class="audit-verdict vf">FTC Flag</span>
           <span class="audit-why"><strong>"Clinically proven"</strong> requires substantiation on file. Vague "testosterone boost" without dose, population, and timeframe is an unsubstantiated structure/function claim.</span>
         </div>
         <div class="audit-row">
           <span class="audit-claim">"Reverses cellular aging at the DNA level"</span>
-          <span class="audit-verdict verdict-flag">Meta Ban</span>
+          <span class="audit-verdict vf">Meta Ban</span>
           <span class="audit-why"><strong>"Reverses aging"</strong> implies treatment of a disease process. Meta flags "aging" + "reverses" + mechanism as a prohibited health claim regardless of supplement status.</span>
         </div>
         <div class="audit-row">
           <span class="audit-claim">"Studied in a 2020 human trial at 300mg/day"</span>
-          <span class="audit-verdict verdict-pass">Compliant</span>
+          <span class="audit-verdict vp">Compliant</span>
           <span class="audit-why"><strong>Specific citation with dose and study design</strong> is substantiatable, passes FTC structure/function rules, and does not imply disease treatment.</span>
         </div>
         <div class="audit-row">
           <span class="audit-claim">"Supports healthy cortisol levels already in normal range"</span>
-          <span class="audit-verdict verdict-pass">Compliant</span>
+          <span class="audit-verdict vp">Compliant</span>
           <span class="audit-why"><strong>"Already in normal range"</strong> is FTC-recommended qualifier language for structure/function claims. Avoids implied disease treatment while remaining persuasive.</span>
         </div>
         <div class="audit-row">
           <span class="audit-claim">"Feel like you're 30 again"</span>
-          <span class="audit-verdict verdict-rewrite">Rewrite</span>
-          <span class="audit-why"><strong>Before/after age framing</strong> is a grey zone on Meta — borderline-safe in body copy, high-risk in ad creative. Reframe as a specific mechanism or measurable outcome.</span>
+          <span class="audit-verdict vr">Rewrite</span>
+          <span class="audit-why"><strong>Before/after age framing</strong> is a grey zone — safe in body copy, high-risk in ad creative or subject lines. Reframe as a mechanism or measurable outcome.</span>
         </div>
       </div>
     </div>
@@ -835,37 +964,37 @@ footer a:hover{color:var(--bone-45)}
 </section>
 
 
-<!-- ═══════════════════════════════════════════
-     6. OFFER
-════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════
+     OFFER
+════════════════════════════════════ -->
 <section class="offer" id="services">
   <div class="shell">
     <div class="label" data-reveal>Exactly what you get</div>
     <h2 data-reveal>Three ways to work together</h2>
     <p class="offer-lead" data-reveal>Every deliverable includes a compliance annotation — each claim marked with its evidence source and the FTC/Meta rule it satisfies. You ship with confidence, not guesswork.</p>
     <div class="offer-grid">
-      <div class="offer-card" data-reveal>
+      <div class="offer-card glow-card" data-reveal>
         <span class="offer-num">01 / Email</span>
         <h3>The Flow</h3>
         <p class="tagline">Welcome, cart-abandon, and post-purchase sequences that convert first orders into subscriptions.</p>
-        <ul class="offer-deliverables">
+        <ul class="offer-dl">
           <li>5–7 email sequence, mechanism-first structure</li>
           <li>Subject line A/B variants for every email</li>
           <li>Compliance annotation on every claim</li>
           <li>Delivered in 7 business days</li>
         </ul>
         <div class="offer-price">
-          <span class="price-amount">$500</span>
-          <span class="price-note">flat rate</span>
+          <span class="price-n">$500</span>
+          <span class="price-m">flat rate</span>
         </div>
-        <span class="offer-timeline">7-day turnaround</span>
+        <span class="offer-tl">7-day turnaround</span>
       </div>
-      <div class="offer-card featured" data-reveal>
-        <span class="featured-badge">Most requested</span>
+      <div class="offer-card featured glow-card" data-reveal>
+        <span class="feat-badge">Most requested</span>
         <span class="offer-num">02 / Pages</span>
         <h3>The Engine</h3>
         <p class="tagline">Full sales page or VSL script built to carry cold, skeptical traffic from awareness to checkout.</p>
-        <ul class="offer-deliverables">
+        <ul class="offer-dl">
           <li>Full long-form page or VSL script (3,000–6,000 words)</li>
           <li>Buyer research dossier on your category's objections</li>
           <li>Headline swipe file (10+ tested angles)</li>
@@ -873,42 +1002,42 @@ footer a:hover{color:var(--bone-45)}
           <li>One revision round included</li>
         </ul>
         <div class="offer-price">
-          <span class="price-amount">$1,000</span>
-          <span class="price-note">starting</span>
+          <span class="price-n">$1,000</span>
+          <span class="price-m">starting</span>
         </div>
-        <span class="offer-timeline">10–14 day turnaround</span>
+        <span class="offer-tl">10–14 day turnaround</span>
       </div>
-      <div class="offer-card" data-reveal>
+      <div class="offer-card glow-card" data-reveal>
         <span class="offer-num">03 / Retainer</span>
         <h3>The Standing Retainer</h3>
         <p class="tagline">A copy chief on call — monthly assets, testing roadmap, ad-claim review before every launch.</p>
-        <ul class="offer-deliverables">
+        <ul class="offer-dl">
           <li>Monthly asset production (pages, emails, ad angles)</li>
           <li>Ad-claim review before every campaign launch</li>
           <li>Offer and angle consulting</li>
-          <li>Priority 48-hour turnaround on urgent requests</li>
+          <li>Priority 48-hour turnaround</li>
         </ul>
         <div class="offer-price">
-          <span class="price-amount">$1,300</span>
-          <span class="price-note">/ month</span>
+          <span class="price-n">$1,300</span>
+          <span class="price-m">/ month</span>
         </div>
-        <span class="offer-timeline">Rolling monthly</span>
+        <span class="offer-tl">Rolling monthly</span>
       </div>
     </div>
     <div class="audit-callout" data-reveal>
-      <div class="audit-callout-text">
+      <div class="ac-text">
         <h3>Not ready to commit? Start with the Compliance &amp; Conversion Audit — $250.</h3>
-        <p>Your existing funnel, marked up line by line in 48 hours. Every weak claim flagged, every conversion leak named, <strong>every rewrite suggested with the evidence that supports it.</strong></p>
+        <p>Your existing funnel marked up line by line in 48 hours. Every weak claim flagged, every leak named, <strong>every rewrite suggested with the evidence that supports it.</strong></p>
       </div>
-      <a class="btn-primary" href="#contact">Request the audit <span class="arrow">→</span></a>
+      <a class="btn-p" href="#contact">Request the audit <span class="arr">→</span></a>
     </div>
   </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════
-     7. FAQ
-════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════
+     FAQ
+════════════════════════════════════ -->
 <section class="faq" id="faq">
   <div class="shell">
     <div class="label" data-reveal>Objections addressed</div>
@@ -917,57 +1046,57 @@ footer a:hover{color:var(--bone-45)}
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
-          <span class="faq-q-text">"I've hired copywriters before and they didn't understand my product. Why is this different?"</span>
+          <span class="faq-q-t">"I've hired copywriters before and they didn't understand my product. Why is this different?"</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-a">
-          <p>The difference is primary literature. A typical copywriter reads your product brief and maybe your competitor's page. I read the actual clinical trials — dose, population, endpoint, statistical significance. That's not a style choice, it's a credential gap.</p>
-          <p>When I write that your NMN "activates the NAD+ salvage pathway at the cellular level," I can tell you which 2020 trial established that mechanism, what dose was used, and what the control group showed. That specificity is what makes cold buyers lean in instead of bouncing.</p>
-        </div>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>The difference is primary literature. A typical copywriter reads your brief and your competitor's page. I read the actual clinical trials — dose, population, endpoint, statistical significance.</p>
+          <p>When I write that your NMN "activates the NAD+ salvage pathway at the cellular level," I can tell you which trial established that mechanism, what dose was used, and what the control group showed. <strong>That specificity is what makes cold buyers lean in instead of bouncing.</strong></p>
+        </div></div>
       </div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
-          <span class="faq-q-text">"How do I know the copy won't get my ads flagged or my account banned?"</span>
+          <span class="faq-q-t">"How do I know the copy won't get my ads flagged or my account banned?"</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-a">
-          <p><strong>Every claim is annotated before delivery</strong> — the annotation includes the evidence source, the FTC substantiation standard it satisfies, and the Meta/TikTok policy it's been checked against. You don't have to trust my judgment blindly; you can verify every claim against the cited source.</p>
-          <p>I also flag the grey zones explicitly. If a line is borderline-safe in body copy but high-risk in ad creative, I tell you that — and provide the safe alternative. You make the final call with full information instead of guessing.</p>
-        </div>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p><strong>Every claim is annotated before delivery</strong> — the annotation includes the evidence source, the FTC substantiation standard it satisfies, and the Meta/TikTok policy it's been checked against. You can verify every claim against the cited source independently.</p>
+          <p>I also flag the grey zones explicitly. If a line is borderline-safe in body copy but high-risk in ad creative, I tell you that — and provide the safe alternative. You make the final call with full information.</p>
+        </div></div>
       </div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
-          <span class="faq-q-text">"My product doesn't have proprietary clinical trials. Can you still write mechanism-first copy?"</span>
+          <span class="faq-q-t">"My product doesn't have proprietary clinical trials. Can you still write mechanism-first copy?"</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-a">
+        <div class="faq-a"><div class="faq-a-inner">
           <p>Yes — and most brands are in this position. Mechanism-first copy doesn't require your own trial. It requires <strong>citing the existing published research on your ingredients</strong> at the doses you actually use.</p>
           <p>If your formula contains ashwagandha at 300mg, there are multiple peer-reviewed human trials I can reference. If your dose doesn't match the studied dose, I'll tell you that too — because misrepresenting efficacy is a compliance risk whether your lawyers catch it or not.</p>
-        </div>
+        </div></div>
       </div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
-          <span class="faq-q-text">"What are your turnaround times, and do you take on multiple clients at once?"</span>
+          <span class="faq-q-t">"What are your turnaround times and do you cap your client volume?"</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-a">
-          <p>Turnaround times: <strong>Funnel audit — 24 hours. Email sequence — 7 business days. Sales page or VSL — 10 to 14 business days.</strong> These are guaranteed in writing before the project starts — not estimates.</p>
-          <p>On volume: I take on a limited number of projects per month to protect turnaround times and output quality. If my schedule is full when you inquire, I'll tell you the next available date honestly rather than overpromising.</p>
-        </div>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p><strong>Funnel audit: 24 hours. Email sequence: 7 business days. Sales page or VSL: 10 to 14 business days.</strong> These are guaranteed in writing before the project starts — not estimates.</p>
+          <p>On volume: I take on a limited number of projects per month to protect turnaround times and quality. If my schedule is full when you inquire, I'll tell you the next available date honestly rather than overpromising.</p>
+        </div></div>
       </div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
-          <span class="faq-q-text">"Why should I pay for a free audit before I've seen any of your work?"</span>
+          <span class="faq-q-t">"Why should I trust a free audit? What's the catch?"</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-a">
-          <p>You shouldn't have to. The before/after rewrites and compliance audit table on this page are the work. You can evaluate the thinking, the specificity, and the compliance reasoning before you send a single email.</p>
-          <p><strong>The free audit is free.</strong> You send me your funnel URL or copy. I send back a specific breakdown of what's leaking conversions and what's creating compliance exposure — in 24 hours, no payment required. The only thing you're risking is 5 minutes to fill out the form.</p>
-        </div>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>There's no catch. The before/after rewrites and compliance audit table on this page are the work — you can evaluate the thinking, specificity, and compliance reasoning before sending anything.</p>
+          <p><strong>The free audit is genuinely free.</strong> You send me your funnel URL or copy. I send back a specific breakdown in 24 hours with no payment required. The only risk is 3 minutes to fill out the form below.</p>
+        </div></div>
       </div>
 
     </div>
@@ -975,41 +1104,58 @@ footer a:hover{color:var(--bone-45)}
 </section>
 
 
-<!-- ═══════════════════════════════════════════
-     8. CONTACT FORM
-════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════
+     CONTACT FORM
+════════════════════════════════════ -->
 <section class="contact-section" id="contact">
   <div class="shell">
     <div class="label" data-reveal>Start here</div>
     <h2 data-reveal>Tell me the product. I'll tell you <em>exactly</em> what's wrong.</h2>
-    <p class="contact-lead" data-reveal>
-      Fill in the form below. <strong>I'll reply within 24 hours</strong> with a specific breakdown of your funnel — what's leaking conversions, what's creating compliance risk, and what I'd test first.
-      No sales call required first.
-    </p>
+    <p class="contact-lead" data-reveal>Fill in the form below. <strong>I'll reply within 24 hours</strong> with a specific breakdown — what's leaking conversions, what's creating compliance exposure, and what I'd fix first. No sales call required.</p>
     <div class="contact-grid">
+
       <div class="contact-form-wrap" data-reveal>
-        <form id="contact-form" novalidate>
-          <div class="form-row">
-            <div class="field" id="f-name">
-              <label for="name">Your name</label>
-              <input type="text" id="name" name="name" placeholder="Jane Smith" autocomplete="name">
-              <span class="field-err">Please enter your name</span>
+        <!-- Step indicator -->
+        <div class="form-steps-indicator" id="fsi">
+          <div class="fsi-dot active" data-step="1"></div>
+          <div class="fsi-line"></div>
+          <div class="fsi-dot" data-step="2"></div>
+          <div class="fsi-line"></div>
+          <div class="fsi-dot" data-step="3"></div>
+          <span class="fsi-label" id="fsi-label">Step 1 of 2 — Your details</span>
+        </div>
+
+        <form id="cform" novalidate>
+          <!-- Step 1 -->
+          <div class="form-step active" id="step1">
+            <div class="frow">
+              <div class="field" id="f-name">
+                <label for="name">Your name</label>
+                <input type="text" id="name" name="name" placeholder="Jane Smith" autocomplete="name">
+                <span class="ferr">Please enter your name</span>
+              </div>
+              <div class="field" id="f-email">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="jane@brand.com" autocomplete="email">
+                <span class="ferr">Please enter a valid email</span>
+              </div>
             </div>
-            <div class="field" id="f-email">
-              <label for="email">Email address</label>
-              <input type="email" id="email" name="email" placeholder="jane@brand.com" autocomplete="email">
-              <span class="field-err">Please enter a valid email</span>
-            </div>
-          </div>
-          <div class="form-row">
             <div class="field" id="f-brand">
               <label for="brand">Brand / product name</label>
-              <input type="text" id="brand" name="brand" placeholder="e.g. Forge, Clarity NMN">
-              <span class="field-err">Please enter your brand name</span>
+              <input type="text" id="brand" name="brand" placeholder="e.g. Forge, Clarity NMN, Signal">
+              <span class="ferr">Please enter your brand name</span>
             </div>
+            <div class="form-nav">
+              <span class="step-note">Free review · No obligation · 24-hour reply</span>
+              <button type="button" class="btn-p" id="next1">Next <span class="arr">→</span></button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="form-step" id="step2">
             <div class="field" id="f-type">
-              <label for="type">Product type</label>
-              <select id="type" name="type">
+              <label for="ptype">Product type</label>
+              <select id="ptype" name="ptype">
                 <option value="" disabled selected>Select one</option>
                 <option value="nmn-nad">NMN / NAD+ / Longevity</option>
                 <option value="testosterone">Testosterone support</option>
@@ -1020,51 +1166,52 @@ footer a:hover{color:var(--bone-45)}
                 <option value="protein">Protein / sports nutrition</option>
                 <option value="other">Other supplement</option>
               </select>
-              <span class="field-err">Please select a product type</span>
+              <span class="ferr">Please select a product type</span>
+            </div>
+            <div class="field">
+              <label for="url">Current funnel URL <span style="color:var(--bone-30);letter-spacing:0;text-transform:none;font-size:11px">(optional)</span></label>
+              <input type="text" id="url" name="url" placeholder="https://yourbrand.com/sales-page">
+            </div>
+            <div class="field" id="f-bottleneck">
+              <label for="bottleneck">Biggest bottleneck right now</label>
+              <textarea id="bottleneck" name="bottleneck" placeholder="e.g. Low cold traffic conversion on our sales page, ad account flagged twice this month, email clicks collapsed after compliance review..."></textarea>
+              <span class="ferr">Please describe your bottleneck (10+ chars)</span>
+            </div>
+            <div class="form-nav">
+              <button type="button" class="btn-g" id="back1">← Back</button>
+              <button type="submit" class="btn-p">Send my funnel <span class="arr">→</span></button>
             </div>
           </div>
-          <div class="field" id="f-url">
-            <label for="url">Funnel URL or current copy <span style="color:var(--bone-20);letter-spacing:0;text-transform:none;font-size:11px">(optional but useful)</span></label>
-            <input type="text" id="url" name="url" placeholder="https://yourbrand.com/sales-page">
-          </div>
-          <div class="field" id="f-bottleneck">
-            <label for="bottleneck">What's your biggest bottleneck right now?</label>
-            <textarea id="bottleneck" name="bottleneck" placeholder="e.g. Low cold traffic conversion on our sales page, ad account flagged twice this month, email click rates collapsed after compliance review..."></textarea>
-            <span class="field-err">Please describe your bottleneck</span>
-          </div>
-          <div class="form-submit-row">
-            <span class="form-note">Free review. No obligation. 24-hour reply.</span>
-            <button type="submit" class="btn-primary">Send my funnel <span class="arrow">→</span></button>
-          </div>
         </form>
+
         <div class="form-success" id="form-success">
           <div class="success-icon">✓</div>
           <h3>You're in. I'll reply within 24 hours.</h3>
-          <p>Check your inbox — I'll send a specific, line-by-line breakdown of your funnel and what I'd change first.</p>
+          <p>Check your inbox — you'll get a specific, line-by-line breakdown of your funnel and what I'd change first.</p>
         </div>
       </div>
 
       <div class="contact-aside">
         <div class="aside-block" data-reveal>
-          <h3>What you get in the audit</h3>
+          <h3>What you get in the free audit</h3>
           <ul class="aside-list">
             <li>Every compliance risk flagged with the <strong>specific FTC or Meta rule</strong> it violates</li>
             <li>Every weak claim rewritten with <strong>the evidence that supports a stronger version</strong></li>
             <li>Top 3 conversion leaks identified with <strong>suggested tests</strong></li>
-            <li>Delivered as a marked-up document in <strong>48 hours</strong></li>
+            <li>Delivered as a marked-up document <strong>within 24 hours</strong></li>
           </ul>
         </div>
         <div class="aside-guarantee" data-reveal>
           <h3>The guarantee</h3>
-          <p>If the paid audit ($250) doesn't show you <strong>at least 5 specific, actionable improvements</strong> to your funnel — compliance fixes or conversion changes — I'll refund it, no questions asked.</p>
+          <p>If the paid audit ($250) doesn't show you <strong>at least 5 specific, actionable improvements</strong> — compliance fixes or conversion changes — I'll refund it in full, no questions asked.</p>
         </div>
         <div class="aside-block" data-reveal>
-          <h3>Response policy</h3>
+          <h3>Response times</h3>
           <ul class="aside-list">
-            <li>Free funnel review: <strong>24-hour reply</strong></li>
-            <li>Paid compliance audit: <strong>48-hour turnaround</strong></li>
-            <li>Project inquiries: <strong>same-day response</strong></li>
-            <li>Direct email: <a href="mailto:mohammedwessam306@gmail.com" style="color:var(--bone-70);border-bottom:1px solid var(--bone-20)">mohammedwessam306@gmail.com</a></li>
+            <li>Free funnel review: <strong>24 hours</strong></li>
+            <li>Paid compliance audit: <strong>48 hours</strong></li>
+            <li>Project inquiries: <strong>same-day</strong></li>
+            <li>Direct email: <a href="mailto:mohammedwessam306@gmail.com" style="color:var(--bone-80);border-bottom:1px solid var(--bone-15)">mohammedwessam306@gmail.com</a></li>
           </ul>
         </div>
       </div>
@@ -1085,138 +1232,219 @@ footer a:hover{color:var(--bone-45)}
 (function(){
 'use strict';
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine    = matchMedia('(hover:hover) and (pointer:fine)').matches;
 
-/* ── Smooth scroll ───────────────────────────── */
-if(!reduced && typeof Lenis !== 'undefined'){
-  const lenis = new Lenis({duration:1.1, easing:t=>1-Math.pow(1-t,4)});
+/* ── Smooth scroll ─────────────────────────── */
+if(!reduced && typeof Lenis!=='undefined'){
+  const lenis = new Lenis({duration:1.1,easing:t=>1-Math.pow(1-t,4)});
   (function raf(t){lenis.raf(t);requestAnimationFrame(raf)})(0);
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
     a.addEventListener('click',e=>{
       const id=a.getAttribute('href');
-      if(id.length>1){e.preventDefault();lenis.scrollTo(id,{offset:-80})}
+      if(id.length>1){e.preventDefault();lenis.scrollTo(id,{offset:-100})}
     });
   });
 }
 
-/* ── Progress bar ────────────────────────────── */
-const fill = document.getElementById('progress-fill');
-function updateProgress(){
-  const h = document.documentElement;
-  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-  fill.style.width = Math.min(pct,100) + '%';
+/* ── Cursor ────────────────────────────────── */
+if(fine && !reduced){
+  const dot=document.getElementById('cdot');
+  const ring=document.getElementById('cring');
+  let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+  let clicking=false;
+
+  addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+  });
+  addEventListener('mousedown',()=>{ring.classList.add('click');clicking=true});
+  addEventListener('mouseup',()=>{ring.classList.remove('click');clicking=false});
+
+  (function loop(){
+    rx+=(mx-rx)*.13;ry+=(my-ry)*.13;
+    ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  })();
+
+  document.querySelectorAll('a,button,.sol-card,.offer-card,.pain,.proc-step,.rewrite').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{if(!clicking)ring.classList.add('hover')});
+    el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+  });
 }
-addEventListener('scroll', updateProgress, {passive:true});
 
-/* ── Nav scroll state ────────────────────────── */
-const nav = document.getElementById('nav');
-addEventListener('scroll',()=>{
-  nav.classList.toggle('scrolled', scrollY > 40);
-},{passive:true});
+/* ── Progress bar ──────────────────────────── */
+const pfill=document.getElementById('pfill');
+function updateProgress(){
+  const h=document.documentElement;
+  pfill.style.width=Math.min((h.scrollTop/(h.scrollHeight-h.clientHeight))*100,100)+'%';
+}
+addEventListener('scroll',updateProgress,{passive:true});
 
-/* ── Sticky bar ──────────────────────────────── */
-const stickyBar = document.getElementById('sticky-bar');
-const stickyDismiss = document.getElementById('sticky-dismiss');
-let stickyDismissed = false;
-addEventListener('scroll',()=>{
-  if(stickyDismissed) return;
-  stickyBar.classList.toggle('visible', scrollY > 600);
-},{passive:true});
-stickyDismiss.addEventListener('click',()=>{
-  stickyDismissed = true;
-  stickyBar.classList.remove('visible');
-});
+/* ── Nav ───────────────────────────────────── */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
 
-/* ── Mobile nav ──────────────────────────────── */
-const hamburger = document.getElementById('hamburger');
-const drawer = document.getElementById('mobile-drawer');
+/* ── Hamburger ─────────────────────────────── */
+const hamburger=document.getElementById('hamburger');
+const drawer=document.getElementById('mobile-drawer');
 hamburger.addEventListener('click',()=>{
-  const open = hamburger.classList.toggle('open');
-  drawer.classList.toggle('open', open);
-  hamburger.setAttribute('aria-expanded', open);
+  const open=hamburger.classList.toggle('open');
+  drawer.classList.toggle('open',open);
+  hamburger.setAttribute('aria-expanded',open);
 });
-drawer.querySelectorAll('a').forEach(a=>{
-  a.addEventListener('click',()=>{
-    hamburger.classList.remove('open');
-    drawer.classList.remove('open');
-  });
+drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  hamburger.classList.remove('open');drawer.classList.remove('open');
+}));
+
+/* ── Sticky bar ────────────────────────────── */
+const stickyBar=document.getElementById('sticky-bar');
+let dismissed=false;
+addEventListener('scroll',()=>{
+  if(!dismissed)stickyBar.classList.toggle('visible',scrollY>700);
+},{passive:true});
+document.getElementById('sb-dismiss').addEventListener('click',()=>{
+  dismissed=true;stickyBar.classList.remove('visible');
 });
 
-/* ── Reveals ─────────────────────────────────── */
-const io = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.classList.add('in');
-      io.unobserve(e.target);
-    }
-  });
-},{threshold:.1, rootMargin:'0px 0px -30px 0px'});
-
-document.querySelectorAll('[data-reveal],[data-reveal-fade]').forEach((el,i)=>{
-  el.style.transitionDelay = ((i % 4) * 0.08) + 's';
+/* ── Reveals ───────────────────────────────── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('[data-reveal]').forEach((el,i)=>{
+  el.style.transitionDelay=((i%4)*.08)+'s';
   io.observe(el);
 });
 
-/* ── FAQ accordion ───────────────────────────── */
+/* ── ECG dividers ──────────────────────────── */
+const ecgIo=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.querySelector('.ecg').classList.add('in');ecgIo.unobserve(e.target)}});
+},{threshold:.3});
+document.querySelectorAll('[data-ecg]').forEach(el=>ecgIo.observe(el));
+
+/* ── Counter animation ─────────────────────── */
+function animateCounter(el){
+  const target=+el.dataset.target;
+  const dur=1400;const start=performance.now();
+  (function update(now){
+    const p=Math.min((now-start)/dur,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.round(ease*target);
+    if(p<1)requestAnimationFrame(update);
+  })(start);
+}
+const ctrIo=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.counter').forEach(animateCounter);
+      ctrIo.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.stats-grid').forEach(el=>ctrIo.observe(el));
+
+/* ── Mouse-tracking card glow ──────────────── */
+if(fine){
+  document.querySelectorAll('.glow-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      card.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      card.style.setProperty('--my',(e.clientY-r.top)+'px');
+    });
+  });
+}
+
+/* ── Parallax hero bg ──────────────────────── */
+if(!reduced){
+  const heroBg=document.getElementById('hero-bg');
+  addEventListener('scroll',()=>{
+    heroBg.style.transform=`translateY(${scrollY*.22}px)`;
+  },{passive:true});
+}
+
+/* ── Before/after toggle ───────────────────── */
+document.querySelectorAll('.rewrite').forEach(rw=>{
+  rw.querySelectorAll('.rw-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const pane=tab.dataset.pane;
+      rw.querySelectorAll('.rw-tab').forEach(t=>t.classList.toggle('active',t===tab));
+      rw.querySelectorAll('.rw-pane').forEach(p=>p.classList.toggle('active',p.classList.contains(pane)));
+    });
+  });
+});
+
+/* ── FAQ accordion ─────────────────────────── */
 document.querySelectorAll('.faq-q').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    const item = btn.closest('.faq-item');
-    const ans = item.querySelector('.faq-a');
-    const isOpen = btn.classList.contains('open');
+    const isOpen=btn.classList.contains('open');
     document.querySelectorAll('.faq-q.open').forEach(b=>{
-      b.classList.remove('open');
-      b.setAttribute('aria-expanded','false');
+      b.classList.remove('open');b.setAttribute('aria-expanded','false');
       b.closest('.faq-item').querySelector('.faq-a').classList.remove('open');
     });
     if(!isOpen){
-      btn.classList.add('open');
-      btn.setAttribute('aria-expanded','true');
-      ans.classList.add('open');
+      btn.classList.add('open');btn.setAttribute('aria-expanded','true');
+      btn.closest('.faq-item').querySelector('.faq-a').classList.add('open');
     }
   });
 });
 
-/* ── Contact form ────────────────────────────── */
-const form = document.getElementById('contact-form');
-const successEl = document.getElementById('form-success');
+/* ── Multi-step form ───────────────────────── */
+function showStep(n){
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  const label=document.getElementById('fsi-label');
+  const dots=document.querySelectorAll('.fsi-dot');
+  if(n===1){
+    label.textContent='Step 1 of 2 — Your details';
+    dots[0].classList.add('active');dots[0].classList.remove('done');
+    dots[1].classList.remove('active','done');dots[2].classList.remove('active','done');
+  } else {
+    label.textContent='Step 2 of 2 — Your product';
+    dots[0].classList.remove('active');dots[0].classList.add('done');
+    dots[1].classList.add('active');dots[2].classList.remove('active','done');
+  }
+}
 
-function validateField(id, testFn){
-  const wrap = document.getElementById('f-'+id);
-  const el = document.getElementById(id);
-  const ok = testFn(el.value.trim());
-  wrap.classList.toggle('error', !ok);
+function validateField(wrapId,testFn){
+  const wrap=document.getElementById('f-'+wrapId);
+  if(!wrap)return true;
+  const el=wrap.querySelector('input,select,textarea');
+  const ok=testFn(el?el.value.trim():'');
+  wrap.classList.toggle('err',!ok);
   return ok;
 }
 
-form.addEventListener('submit', e=>{
-  e.preventDefault();
-  const nameOk     = validateField('name',     v=>v.length>0);
-  const emailOk    = validateField('email',    v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
-  const brandOk    = validateField('brand',    v=>v.length>0);
-  const typeOk     = validateField('type',     v=>v.length>0);
-  const bottomOk   = validateField('bottleneck',v=>v.length>10);
-  if(!(nameOk && emailOk && brandOk && typeOk && bottomOk)) return;
-
-  const name       = document.getElementById('name').value.trim();
-  const email      = document.getElementById('email').value.trim();
-  const brand      = document.getElementById('brand').value.trim();
-  const type       = document.getElementById('type').value;
-  const url        = document.getElementById('url').value.trim();
-  const bottleneck = document.getElementById('bottleneck').value.trim();
-
-  const subject = encodeURIComponent(`LUMEN — Funnel review request from ${name}`);
-  const body = encodeURIComponent(
-    `Name: ${name}\nEmail: ${email}\nBrand: ${brand}\nProduct type: ${type}\nFunnel URL: ${url||'(not provided)'}\n\nMain bottleneck:\n${bottleneck}`
-  );
-  window.location.href = `mailto:mohammedwessam306@gmail.com?subject=${subject}&body=${body}`;
-
-  form.style.display = 'none';
-  successEl.classList.add('show');
+document.getElementById('next1').addEventListener('click',()=>{
+  const nameOk =validateField('name', v=>v.length>0);
+  const emailOk=validateField('email',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+  const brandOk=validateField('brand',v=>v.length>0);
+  if(nameOk&&emailOk&&brandOk)showStep(2);
 });
+document.getElementById('back1').addEventListener('click',()=>showStep(1));
 
 document.querySelectorAll('.field input,.field select,.field textarea').forEach(el=>{
-  el.addEventListener('input',()=>{
-    el.closest('.field').classList.remove('error');
-  });
+  el.addEventListener('input',()=>el.closest('.field').classList.remove('err'));
+});
+
+document.getElementById('cform').addEventListener('submit',e=>{
+  e.preventDefault();
+  const typeOk   =validateField('type',      v=>v.length>0);
+  const bottomOk =validateField('bottleneck',v=>v.length>10);
+  if(!(typeOk&&bottomOk))return;
+
+  const name    =document.getElementById('name').value.trim();
+  const email   =document.getElementById('email').value.trim();
+  const brand   =document.getElementById('brand').value.trim();
+  const ptype   =document.getElementById('ptype').value;
+  const url     =document.getElementById('url').value.trim();
+  const bottom  =document.getElementById('bottleneck').value.trim();
+
+  const subject =encodeURIComponent(`LUMEN — Funnel review from ${name}`);
+  const body    =encodeURIComponent(`Name: ${name}\nEmail: ${email}\nBrand: ${brand}\nProduct type: ${ptype}\nFunnel URL: ${url||'(not provided)'}\n\nBottleneck:\n${bottom}`);
+  window.location.href=`mailto:mohammedwessam306@gmail.com?subject=${subject}&body=${body}`;
+
+  document.getElementById('cform').style.display='none';
+  document.getElementById('fsi').style.display='none';
+  document.getElementById('form-success').classList.add('show');
 });
 
 })();
