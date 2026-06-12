@@ -3,746 +3,751 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LUMEN — Persuasion that performs. Claims that hold up.</title>
-<meta name="description" content="LUMEN is a medical-authority copy studio for health, supplement, and longevity brands. Conversion copy that survives FTC and Meta review.">
+<title>LUMEN — Health Supplement Copy That Converts AND Survives FTC Review</title>
+<meta name="description" content="Conversion copy for supplement and longevity brands — written by a medically trained direct-response specialist. Sells hard. Passes compliance. No rewrites from lawyers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#0E0E0E;
-  --carbon:#151413;
+  --carbon:#131211;
+  --card:#171614;
   --bone:#E8E2D6;
-  --bone-55:rgba(232,226,214,.55);
-  --bone-30:rgba(232,226,214,.30);
-  --bone-12:rgba(232,226,214,.12);
+  --bone-70:rgba(232,226,214,.70);
+  --bone-45:rgba(232,226,214,.45);
+  --bone-20:rgba(232,226,214,.20);
+  --bone-10:rgba(232,226,214,.10);
   --ox:#7A2E2E;
-  --ox-bright:#A03A3A;
+  --ox-mid:#9B3535;
+  --ox-bright:#C0443A;
   --serif:'Cormorant Garamond',Georgia,serif;
   --sans:'Archivo',Helvetica,Arial,sans-serif;
   --ease:cubic-bezier(.22,1,.36,1);
+  --max:1160px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-html.lenis{height:auto}
-.lenis.lenis-smooth{scroll-behavior:auto}
 body{
   background:var(--ink);
   color:var(--bone);
   font-family:var(--sans);
   font-size:16px;
-  line-height:1.6;
+  line-height:1.65;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
 ::selection{background:var(--ox);color:var(--bone)}
+a{color:inherit;text-decoration:none}
 
-/* ---------- cursor ---------- */
-.cursor-dot,.cursor-ring{
-  position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
-  border-radius:50%;transform:translate(-50%,-50%);
+/* ── TYPOGRAPHY ────────────────────────────────── */
+.serif{font-family:var(--serif)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.06;letter-spacing:-.01em}
+.label{
+  font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--ox-bright);
+  display:flex;align-items:center;gap:10px;
 }
-.cursor-dot{width:6px;height:6px;background:var(--bone)}
-.cursor-ring{
-  width:34px;height:34px;border:1px solid var(--bone-30);
-  transition:width .35s var(--ease),height .35s var(--ease),border-color .35s var(--ease),background .35s var(--ease);
-}
-.cursor-ring.is-active{width:64px;height:64px;border-color:var(--ox-bright);background:rgba(122,46,46,.08)}
-@media (hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+.label::before{content:"";width:28px;height:1px;background:var(--ox-bright);flex-shrink:0}
+.muted{color:var(--bone-45)}
 
-/* ---------- nav ---------- */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:28px clamp(24px,5vw,64px);
-  mix-blend-mode:difference;
-}
-.wordmark{
-  font-family:var(--sans);font-weight:600;font-size:15px;letter-spacing:.42em;
-  color:var(--bone);text-decoration:none;
-}
-.nav-cta{
-  font-size:12px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--bone);text-decoration:none;padding-bottom:4px;
-  border-bottom:1px solid var(--bone-30);
-  transition:border-color .3s;
-}
-.nav-cta:hover{border-color:var(--bone)}
-
-/* ---------- shared ---------- */
-section{position:relative;padding:clamp(110px,16vh,180px) clamp(24px,6vw,80px)}
-.shell{max-width:1240px;margin:0 auto}
-.eyebrow{
-  display:flex;align-items:center;gap:14px;
-  font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--bone-55);
-  margin-bottom:clamp(28px,4vh,44px);
-}
-.eyebrow::before{content:"";width:34px;height:1px;background:var(--ox-bright)}
-h1,h2,.display{font-family:var(--serif);font-weight:600;line-height:1.02;letter-spacing:-.01em}
-.body-copy{color:var(--bone-55);max-width:560px;font-size:clamp(15px,1.2vw,17px)}
+/* ── LAYOUT ────────────────────────────────────── */
+.shell{max-width:var(--max);margin:0 auto;padding:0 clamp(20px,5vw,60px)}
+section{padding:clamp(80px,12vh,130px) 0}
 
 /* reveal */
-[data-reveal]{opacity:0;transform:translateY(36px);transition:opacity 1s var(--ease),transform 1.1s var(--ease)}
+[data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 [data-reveal].in{opacity:1;transform:none}
 
-/* ECG divider */
-.ecg{display:block;width:min(720px,82vw);margin:0 auto;overflow:visible}
-.ecg path{
-  fill:none;stroke:var(--ox-bright);stroke-width:1.5;opacity:.85;
-  stroke-dasharray:1200;stroke-dashoffset:1200;
-  transition:stroke-dashoffset 2.4s var(--ease);
+/* ── NAV ───────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:22px clamp(20px,5vw,60px);
+  background:rgba(14,14,14,.88);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--bone-10);
 }
-.ecg.in path{stroke-dashoffset:0}
+.wordmark{font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.44em;color:var(--bone)}
+.nav-cta{
+  font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  background:var(--ox-bright);color:var(--bone);
+  padding:11px 24px;border-radius:3px;
+  transition:background .25s;
+}
+.nav-cta:hover{background:var(--ox-mid)}
 
-/* ---------- hero ---------- */
+/* ── HERO ──────────────────────────────────────── */
 .hero{
-  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
-  padding-top:120px;
+  min-height:100vh;display:flex;align-items:center;
+  padding-top:100px;
+  background:
+    radial-gradient(ellipse 70% 60% at 80% 50%,rgba(122,46,46,.13),transparent 65%),
+    var(--ink);
 }
-#helix{position:absolute;inset:0;z-index:0}
-.hero::after{
-  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse 90% 70% at 50% 45%,transparent 30%,var(--ink) 100%);
-}
-.hero .shell{position:relative;z-index:2}
+.hero .shell{display:grid;grid-template-columns:1fr;gap:0}
+.hero .label{margin-bottom:28px}
 .hero h1{
-  font-size:clamp(52px,8.4vw,124px);
-  max-width:14ch;
+  font-size:clamp(44px,6.5vw,96px);
+  max-width:17ch;
+  margin-bottom:clamp(22px,3vh,32px);
 }
-.hero h1 .w{display:inline-block;overflow:hidden;vertical-align:bottom}
-.hero h1 .w span{
-  display:inline-block;transform:translateY(110%);
-  transition:transform 1.1s var(--ease);
-}
-.hero.loaded h1 .w span{transform:none}
-.hero h1 em{font-style:italic;color:var(--ox-bright);-webkit-text-stroke:0}
+.hero h1 em{font-style:italic;color:var(--ox-bright)}
 .hero-sub{
-  margin-top:clamp(26px,3.4vh,40px);
-  color:var(--bone-55);max-width:46ch;font-size:clamp(15px,1.25vw,18px);
-  opacity:0;transform:translateY(20px);
-  transition:opacity 1s var(--ease) .9s,transform 1s var(--ease) .9s;
+  color:var(--bone-70);
+  font-size:clamp(16px,1.3vw,19px);
+  max-width:52ch;
+  line-height:1.7;
+  margin-bottom:clamp(36px,5vh,52px);
 }
-.hero.loaded .hero-sub{opacity:1;transform:none}
-.hero-cta-row{
-  margin-top:clamp(38px,5vh,56px);display:flex;align-items:center;gap:36px;
-  opacity:0;transition:opacity 1s var(--ease) 1.25s;
+.hero-sub strong{color:var(--bone);font-weight:500}
+.cta-group{display:flex;align-items:center;gap:clamp(16px,2vw,28px);flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--ox-bright);color:var(--bone);
+  font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  padding:18px 36px;border-radius:3px;
+  transition:background .25s,transform .25s var(--ease);
+  border:none;cursor:pointer;
 }
-.hero.loaded .hero-cta-row{opacity:1}
-.scroll-cue{
-  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:2;
-  font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--bone-30);
-  display:flex;flex-direction:column;align-items:center;gap:12px;
+.btn-primary:hover{background:var(--ox-mid);transform:translateY(-2px)}
+.btn-primary .arrow{transition:transform .3s var(--ease)}
+.btn-primary:hover .arrow{transform:translateX(5px)}
+.btn-secondary{
+  font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-45);
+  border-bottom:1px solid var(--bone-20);padding-bottom:3px;
+  transition:color .25s,border-color .25s;
 }
-.scroll-cue::after{
-  content:"";width:1px;height:44px;background:linear-gradient(var(--bone-30),transparent);
-  animation:cue 2.4s var(--ease) infinite;
+.btn-secondary:hover{color:var(--bone);border-color:var(--bone-45)}
+.hero-proof{
+  display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  margin-top:clamp(40px,6vh,60px);
+  padding-top:clamp(30px,4vh,44px);
+  border-top:1px solid var(--bone-10);
 }
-@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hero-proof-item{font-size:12.5px;color:var(--bone-45);letter-spacing:.04em}
+.hero-proof-item strong{color:var(--bone-70);font-weight:500}
+.divider{width:1px;height:18px;background:var(--bone-20)}
 
-/* magnetic button */
-.btn{
-  position:relative;display:inline-flex;align-items:center;gap:14px;
-  font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;
-  color:var(--bone);text-decoration:none;
-  border:1px solid var(--bone-30);border-radius:999px;
-  padding:20px 38px;overflow:hidden;
-  transition:border-color .4s var(--ease),color .4s var(--ease);
-  will-change:transform;
+/* ── PROBLEM ───────────────────────────────────── */
+.problem{background:var(--carbon)}
+.problem h2{
+  font-size:clamp(32px,4.2vw,58px);
+  max-width:22ch;
+  margin:20px 0 clamp(44px,7vh,70px);
 }
-.btn::before{
-  content:"";position:absolute;inset:0;background:var(--ox);border-radius:inherit;
-  transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease);z-index:-1;
+.pain-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--bone-10);
+  border:1px solid var(--bone-10);
+  border-radius:6px;
+  overflow:hidden;
 }
-.btn:hover{border-color:var(--ox)}
-.btn:hover::before{transform:scaleX(1)}
-.btn .arrow{transition:transform .4s var(--ease)}
-.btn:hover .arrow{transform:translateX(6px)}
-.ghost-link{
-  font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-55);
-  text-decoration:none;border-bottom:1px solid transparent;transition:color .3s,border-color .3s;
+.pain{
+  background:var(--card);
+  padding:clamp(28px,3vw,44px);
 }
-.ghost-link:hover{color:var(--bone);border-color:var(--bone-30)}
-
-/* ---------- problem ---------- */
-.problem h2{font-size:clamp(38px,5.4vw,76px);max-width:18ch;margin-bottom:clamp(54px,8vh,90px)}
-.split{
-  display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px);
-  border-top:1px solid var(--bone-12);padding-top:clamp(40px,6vh,64px);
+.pain-num{
+  font-family:var(--serif);font-style:italic;font-size:48px;font-weight:500;
+  color:var(--ox-bright);opacity:.35;
+  line-height:1;margin-bottom:20px;display:block;
 }
-.split .col h3{
-  font-family:var(--serif);font-style:italic;font-weight:500;
-  font-size:clamp(24px,2.6vw,34px);margin-bottom:18px;line-height:1.15;
+.pain h3{
+  font-family:var(--sans);font-size:15px;font-weight:600;
+  color:var(--bone);margin-bottom:12px;line-height:1.4;letter-spacing:0;
 }
-.split .col:first-child h3{color:var(--ox-bright)}
-.split .col p{color:var(--bone-55);font-size:15px;max-width:42ch}
-.thesis{
-  margin-top:clamp(64px,10vh,110px);
-  font-family:var(--serif);font-size:clamp(26px,3.4vw,46px);font-weight:500;line-height:1.2;
-  max-width:24ch;
-}
-.thesis em{font-style:italic;color:var(--ox-bright)}
-
-/* ---------- services ---------- */
-.services-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2vw,28px);
-  margin-top:clamp(20px,3vh,30px);
-}
-.card{
-  position:relative;background:var(--carbon);
-  border:1px solid var(--bone-12);border-radius:6px;
-  padding:clamp(34px,3vw,48px) clamp(28px,2.4vw,40px);
-  transition:border-color .5s var(--ease);
-  transform-style:preserve-3d;will-change:transform;
-}
-.card:hover{border-color:rgba(160,58,58,.5)}
-.card .tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-30);margin-bottom:26px;display:block}
-.card h3{font-family:var(--serif);font-size:clamp(28px,2.4vw,36px);font-weight:600;margin-bottom:14px}
-.card .desc{color:var(--bone-55);font-size:14.5px;margin-bottom:30px;min-height:3.2em}
-.card ul{list-style:none}
-.card li{
-  font-size:13px;color:var(--bone-55);padding:11px 0;border-top:1px solid var(--bone-12);
-  display:flex;gap:12px;align-items:baseline;
-}
-.card li::before{content:"—";color:var(--ox-bright);flex-shrink:0}
-.card .from{
-  margin-top:30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-30);
-}
-.card .from strong{color:var(--bone);font-weight:500}
-.audit-line{
-  margin-top:clamp(44px,6vh,64px);text-align:center;color:var(--bone-55);font-size:14.5px;
-}
-.audit-line a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ox-bright)}
-
-/* ---------- edge ---------- */
-.edge{text-align:center}
-.edge .quote{
-  font-family:var(--serif);font-weight:600;
-  font-size:clamp(34px,5.6vw,84px);line-height:1.06;
-  max-width:18ch;margin:0 auto clamp(44px,7vh,72px);
-  will-change:transform;
-}
-.edge .quote em{font-style:italic;color:var(--ox-bright)}
-.edge .body-copy{margin:0 auto;text-align:center;max-width:54ch}
-.edge .body-copy + .body-copy{margin-top:22px}
-
-/* ---------- proof ---------- */
-.proof-frame{
-  margin-top:clamp(20px,3vh,30px);
-  border:1px solid var(--bone-12);border-radius:6px;background:var(--carbon);
-  padding:clamp(30px,4vw,56px);
-}
-.compare{position:relative;user-select:none}
-.compare .pane{padding:clamp(8px,1vw,12px) 0}
-.compare .label{
-  font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-30);
-  display:block;margin-bottom:18px;
-}
-.compare .line{
-  font-family:var(--serif);font-weight:500;line-height:1.18;
-  font-size:clamp(22px,3vw,40px);max-width:26ch;
-}
-.pane-before .line{color:var(--bone-30);text-decoration:line-through;text-decoration-color:rgba(160,58,58,.6);text-decoration-thickness:1px}
-.pane-after{border-top:1px solid var(--bone-12);margin-top:clamp(26px,3.4vh,38px);padding-top:clamp(26px,3.4vh,38px)}
-.pane-after .label{color:var(--ox-bright)}
-.standards{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2vw,28px);
+.pain p{font-size:14px;color:var(--bone-45);line-height:1.7}
+.pain p strong{color:var(--bone-70);font-weight:500}
+.problem-truth{
   margin-top:clamp(44px,6vh,64px);
+  padding:clamp(28px,3vw,44px);
+  background:var(--card);
+  border:1px solid var(--bone-10);
+  border-left:3px solid var(--ox-bright);
+  border-radius:0 6px 6px 0;
 }
-.standard{border-top:1px solid var(--bone-12);padding-top:22px}
-.standard .n{font-family:var(--serif);font-style:italic;color:var(--ox-bright);font-size:18px;display:block;margin-bottom:10px}
-.standard p{font-size:13.5px;color:var(--bone-55)}
+.problem-truth p{
+  font-family:var(--serif);font-size:clamp(22px,2.6vw,32px);font-weight:500;
+  line-height:1.25;max-width:30ch;
+}
+.problem-truth p em{font-style:italic;color:var(--ox-bright)}
 
-/* ---------- work ---------- */
-.work-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2vw,28px);
-  margin-top:clamp(20px,3vh,30px);
+/* ── SOLUTION ──────────────────────────────────── */
+.solution h2{
+  font-size:clamp(32px,4.2vw,58px);
+  max-width:22ch;
+  margin:20px 0 clamp(20px,3vh,28px);
 }
-.work{
-  position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;
-  border:1px solid var(--bone-12);text-decoration:none;display:block;
+.solution-lead{
+  font-size:clamp(16px,1.3vw,18px);color:var(--bone-70);
+  max-width:58ch;line-height:1.75;
+  margin-bottom:clamp(44px,7vh,64px);
 }
-.work .bg{
-  position:absolute;inset:0;transition:transform 1.1s var(--ease);
+.solution-lead strong{color:var(--bone);font-weight:500}
+.solution-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(20px,2.5vw,32px);
 }
-.work:hover .bg{transform:scale(1.06)}
-.w1 .bg{background:
-  radial-gradient(120% 110% at 15% 20%,rgba(122,46,46,.55),transparent 55%),
-  radial-gradient(90% 90% at 85% 85%,rgba(232,226,214,.10),transparent 60%),
-  linear-gradient(160deg,#1a1414,#0E0E0E)}
-.w2 .bg{background:
-  radial-gradient(120% 120% at 80% 15%,rgba(232,226,214,.14),transparent 55%),
-  radial-gradient(100% 100% at 15% 85%,rgba(122,46,46,.4),transparent 60%),
-  linear-gradient(200deg,#141416,#0E0E0E)}
-.w3 .bg{background:
-  radial-gradient(130% 110% at 50% 110%,rgba(122,46,46,.5),transparent 60%),
-  linear-gradient(180deg,#16120f,#0E0E0E)}
-.w4 .bg{background:
-  radial-gradient(100% 130% at 100% 50%,rgba(232,226,214,.12),transparent 55%),
-  radial-gradient(120% 110% at 0% 0%,rgba(122,46,46,.45),transparent 55%),
-  linear-gradient(140deg,#131315,#0E0E0E)}
-.work .meta{
-  position:absolute;left:0;right:0;bottom:0;padding:clamp(22px,2.4vw,34px);
-  display:flex;justify-content:space-between;align-items:flex-end;
-  background:linear-gradient(transparent,rgba(14,14,14,.85));
+.sol-card{
+  background:var(--card);
+  border:1px solid var(--bone-10);
+  border-radius:6px;
+  padding:clamp(28px,3vw,44px);
+  position:relative;
 }
-.work .name{
-  font-family:var(--serif);font-size:clamp(24px,2.4vw,34px);font-weight:600;color:var(--bone);
-  transform:translateY(8px);transition:transform .6s var(--ease);
+.sol-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--ox-bright),transparent);
+  border-radius:6px 6px 0 0;
 }
-.work:hover .name{transform:none}
-.work .kind{
-  font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--bone-55);
-  opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease) .08s,transform .6s var(--ease) .08s;
-  text-align:right;
+.sol-icon{
+  font-family:var(--serif);font-style:italic;font-size:13px;
+  color:var(--ox-bright);letter-spacing:.08em;
+  margin-bottom:18px;display:block;
 }
-.work:hover .kind{opacity:1;transform:none}
-.work-note{margin-top:26px;font-size:12.5px;color:var(--bone-30);letter-spacing:.04em}
+.sol-card h3{
+  font-family:var(--sans);font-size:16px;font-weight:600;
+  color:var(--bone);margin-bottom:12px;letter-spacing:0;
+}
+.sol-card p{font-size:14px;color:var(--bone-45);line-height:1.7}
+.sol-card p strong{color:var(--bone-70);font-weight:500}
 
-/* ---------- founder ---------- */
-.founder{text-align:center}
-.founder .line{
-  font-family:var(--serif);font-weight:500;font-style:italic;
-  font-size:clamp(30px,4.6vw,64px);line-height:1.12;max-width:20ch;margin:0 auto;
+/* ── PROOF ─────────────────────────────────────── */
+.proof{background:var(--carbon)}
+.proof h2{
+  font-size:clamp(32px,4.2vw,58px);
+  max-width:22ch;
+  margin:20px 0 clamp(44px,7vh,64px);
 }
-.founder .line strong{font-style:normal;font-weight:600;color:var(--ox-bright)}
-.founder .sub{margin-top:26px;color:var(--bone-30);font-size:13px;letter-spacing:.22em;text-transform:uppercase}
-
-/* ---------- contact ---------- */
-.contact{text-align:center;padding-bottom:clamp(80px,12vh,140px)}
-.contact h2{font-size:clamp(44px,7vw,104px);margin-bottom:clamp(30px,4vh,44px)}
-.contact h2 em{font-style:italic;color:var(--ox-bright)}
-.contact .body-copy{margin:0 auto clamp(40px,5vh,56px)}
-.contact-email{
-  display:block;margin-top:30px;font-size:13px;letter-spacing:.14em;color:var(--bone-30);
-  text-decoration:none;transition:color .3s;
+.rewrites{display:flex;flex-direction:column;gap:clamp(16px,2vh,24px)}
+.rewrite{
+  background:var(--card);
+  border:1px solid var(--bone-10);
+  border-radius:6px;overflow:hidden;
 }
-.contact-email:hover{color:var(--bone-55)}
+.rewrite-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px clamp(20px,2.5vw,36px);
+  border-bottom:1px solid var(--bone-10);
+  background:rgba(255,255,255,.02);
+}
+.rewrite-product{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-45)}
+.rewrite-tag{
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  padding:5px 12px;border-radius:20px;
+  background:rgba(192,68,58,.15);color:var(--ox-bright);
+  border:1px solid rgba(192,68,58,.3);
+}
+.rewrite-body{
+  display:grid;grid-template-columns:1fr 1fr;
+}
+.rw-pane{padding:clamp(22px,2.5vw,36px)}
+.rw-pane + .rw-pane{border-left:1px solid var(--bone-10)}
+.rw-label{
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  margin-bottom:14px;display:block;
+}
+.rw-pane.before .rw-label{color:var(--bone-20)}
+.rw-pane.after .rw-label{color:var(--ox-bright)}
+.rw-copy{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(17px,1.8vw,24px);line-height:1.3;
+}
+.rw-pane.before .rw-copy{
+  color:var(--bone-20);
+  text-decoration:line-through;
+  text-decoration-color:rgba(192,68,58,.5);
+  text-decoration-thickness:1px;
+}
+.rw-pane.after .rw-copy{color:var(--bone)}
+.rw-note{
+  margin-top:10px;font-size:12px;color:var(--bone-45);line-height:1.6;
+  font-style:italic;
+}
+.rw-note strong{font-style:normal;color:var(--ox-bright);font-weight:500}
+.proof-compliance{
+  margin-top:clamp(44px,6vh,64px);
+  background:var(--card);
+  border:1px solid var(--bone-10);
+  border-radius:6px;padding:clamp(28px,3vw,48px);
+}
+.proof-compliance h3{
+  font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:.02em;
+  color:var(--bone);margin-bottom:clamp(22px,3vh,32px);
+}
+.audit-rows{display:flex;flex-direction:column;gap:0}
+.audit-row{
+  display:grid;grid-template-columns:2fr 1fr 2fr;gap:clamp(14px,2vw,28px);
+  padding:16px 0;border-top:1px solid var(--bone-10);align-items:baseline;
+}
+.audit-row:first-child{border-top:none;padding-top:0}
+.audit-claim{font-size:14px;color:var(--bone-70);font-style:italic}
+.audit-verdict{
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;text-align:center;white-space:nowrap;
+  width:fit-content;
+}
+.verdict-flag{background:rgba(192,68,58,.15);color:var(--ox-bright);border:1px solid rgba(192,68,58,.3)}
+.verdict-pass{background:rgba(80,140,80,.12);color:#6db06d;border:1px solid rgba(80,140,80,.3)}
+.verdict-rewrite{background:rgba(180,140,40,.12);color:#c8a84b;border:1px solid rgba(180,140,40,.3)}
+.audit-why{font-size:13px;color:var(--bone-45);line-height:1.6}
+.audit-why strong{color:var(--bone-70);font-weight:500}
 
+/* ── OFFER ─────────────────────────────────────── */
+.offer h2{
+  font-size:clamp(32px,4.2vw,58px);
+  max-width:22ch;
+  margin:20px 0 clamp(14px,2vh,20px);
+}
+.offer-lead{
+  font-size:clamp(15px,1.2vw,17px);color:var(--bone-45);max-width:56ch;
+  margin-bottom:clamp(36px,5vh,52px);
+}
+.offer-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(14px,2vw,22px);
+  margin-bottom:clamp(22px,3vh,32px);
+}
+.offer-card{
+  background:var(--card);
+  border:1px solid var(--bone-10);
+  border-radius:6px;
+  padding:clamp(24px,2.5vw,38px);
+  display:flex;flex-direction:column;
+  transition:border-color .35s var(--ease);
+}
+.offer-card:hover{border-color:rgba(192,68,58,.45)}
+.offer-card.featured{
+  border-color:rgba(192,68,58,.35);
+  background:linear-gradient(160deg,rgba(122,46,46,.12),var(--card) 60%);
+}
+.offer-num{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--bone-20);margin-bottom:20px;display:block}
+.offer-card h3{
+  font-family:var(--serif);font-size:clamp(22px,2vw,30px);font-weight:600;
+  color:var(--bone);margin-bottom:10px;
+}
+.offer-card .tagline{font-size:13.5px;color:var(--bone-45);margin-bottom:22px;line-height:1.6}
+.offer-deliverables{list-style:none;margin-bottom:24px;flex:1}
+.offer-deliverables li{
+  font-size:13px;color:var(--bone-45);padding:10px 0;
+  border-top:1px solid var(--bone-10);
+  display:flex;gap:10px;align-items:baseline;line-height:1.5;
+}
+.offer-deliverables li::before{content:"→";color:var(--ox-bright);flex-shrink:0;font-size:11px}
+.offer-price{
+  margin-top:auto;padding-top:20px;border-top:1px solid var(--bone-10);
+  display:flex;align-items:baseline;gap:8px;
+}
+.price-amount{font-family:var(--serif);font-size:28px;font-weight:600;color:var(--bone)}
+.price-note{font-size:12px;color:var(--bone-45);letter-spacing:.04em}
+.offer-timeline{font-size:11px;color:var(--ox-bright);letter-spacing:.16em;text-transform:uppercase;margin-top:8px}
+.audit-callout{
+  padding:clamp(24px,3vw,40px) clamp(24px,3vw,44px);
+  background:rgba(192,68,58,.08);
+  border:1px solid rgba(192,68,58,.25);
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+}
+.audit-callout-text h3{
+  font-family:var(--sans);font-size:16px;font-weight:600;letter-spacing:.02em;
+  color:var(--bone);margin-bottom:8px;
+}
+.audit-callout-text p{font-size:14px;color:var(--bone-45);max-width:46ch;line-height:1.65}
+.audit-callout-text p strong{color:var(--bone-70);font-weight:500}
+
+/* ── FINAL CTA ─────────────────────────────────── */
+.final-cta{
+  background:var(--carbon);
+  text-align:center;
+  padding:clamp(80px,14vh,140px) 0;
+}
+.final-cta h2{
+  font-size:clamp(36px,5.5vw,80px);
+  max-width:20ch;margin:20px auto clamp(20px,3vh,28px);
+}
+.final-cta h2 em{font-style:italic;color:var(--ox-bright)}
+.final-cta .sub{
+  font-size:clamp(15px,1.3vw,18px);color:var(--bone-45);
+  max-width:50ch;margin:0 auto clamp(36px,5vh,52px);line-height:1.75;
+}
+.final-cta .sub strong{color:var(--bone-70);font-weight:500}
+.cta-box{
+  display:inline-flex;flex-direction:column;align-items:center;gap:14px;
+}
+.cta-disclaimer{font-size:12px;color:var(--bone-20);letter-spacing:.04em}
+.cta-disclaimer a{color:var(--bone-45);border-bottom:1px solid var(--bone-20);transition:color .25s}
+.cta-disclaimer a:hover{color:var(--bone-70)}
+
+/* ── FOOTER ────────────────────────────────────── */
 footer{
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
-  padding:34px clamp(24px,6vw,80px);
-  border-top:1px solid var(--bone-12);
-  font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-30);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  padding:28px clamp(20px,5vw,60px);
+  border-top:1px solid var(--bone-10);
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-20);
 }
 
-/* ----------
-TESTIMONIALS — READY WHEN THE REAL ONES ARRIVE.
-Paste real client quotes into this block and move it above the founder section.
-Do not launch with invented quotes: this studio sells claim integrity.
-<section class="testimonials">
-  <div class="shell">
-    <div class="eyebrow" data-reveal>What founders say</div>
-    <blockquote class="t-quote" data-reveal>
-      <p>"REAL CLIENT QUOTE HERE."</p>
-      <cite>Name — Brand</cite>
-    </blockquote>
-  </div>
-</section>
----------- */
-
-@media (max-width:880px){
-  .split,.services-grid,.standards{grid-template-columns:1fr}
-  .work-grid{grid-template-columns:1fr}
-  .split .col + .col{border-top:1px solid var(--bone-12);padding-top:34px}
-  section{padding-left:22px;padding-right:22px}
+/* ── MOBILE ────────────────────────────────────── */
+@media (max-width:860px){
+  .pain-grid{grid-template-columns:1fr}
+  .solution-grid{grid-template-columns:1fr}
+  .rewrite-body{grid-template-columns:1fr}
+  .rw-pane + .rw-pane{border-left:none;border-top:1px solid var(--bone-10)}
+  .audit-row{grid-template-columns:1fr;gap:8px}
+  .audit-verdict{display:inline-block}
+  .offer-grid{grid-template-columns:1fr}
+  .divider{display:none}
+}
+@media (max-width:540px){
+  .hero-proof{flex-direction:column;align-items:flex-start;gap:12px}
+  .audit-callout{flex-direction:column}
+  .cta-group{flex-direction:column;align-items:flex-start}
 }
 @media (prefers-reduced-motion:reduce){
   [data-reveal]{opacity:1;transform:none;transition:none}
-  .hero h1 .w span{transform:none;transition:none}
-  .hero-sub,.hero-cta-row{opacity:1;transform:none;transition:none}
-  .ecg path{stroke-dashoffset:0;transition:none}
-  .scroll-cue::after{animation:none}
 }
 </style>
 </head>
 <body>
 
-<div class="cursor-dot"></div>
-<div class="cursor-ring"></div>
-
 <nav>
   <a class="wordmark" href="#top">LUMEN</a>
-  <a class="nav-cta" href="#contact">Start a project</a>
+  <a class="nav-cta" href="#contact">Get a Free Audit</a>
 </nav>
 
-<!-- HERO -->
+<!-- ═══════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
 <section class="hero" id="top">
-  <canvas id="helix"></canvas>
   <div class="shell">
-    <div class="eyebrow">A medical-authority copy studio</div>
-    <h1 id="heroline">Persuasion that performs. <em>Claims that hold up.</em></h1>
-    <p class="hero-sub">Conversion copy for health, supplement, and longevity brands — written by a medically trained mind, so it sells hard and survives FTC and Meta review.</p>
-    <div class="hero-cta-row">
-      <a class="btn magnetic" href="#contact">Start a project <span class="arrow">→</span></a>
-      <a class="ghost-link" href="#work">See the work</a>
+    <div class="label" data-reveal>Medical-authority copy studio</div>
+    <h1 data-reveal>Your health copy is leaking revenue — <em>and possibly liability.</em></h1>
+    <p class="hero-sub" data-reveal>
+      Most supplement copy either <strong>gets flagged by Meta and the FTC</strong> or gets watered down until it converts nobody.
+      I write the third kind: claims built on what the evidence actually says, structured to sell cold, skeptical traffic.
+    </p>
+    <div class="cta-group" data-reveal>
+      <a class="btn-primary" href="mailto:mohammedwessam306@gmail.com?subject=LUMEN%20—%20Free%20Funnel%20Audit">
+        Send me your funnel <span class="arrow">→</span>
+      </a>
+      <a class="btn-secondary" href="#proof">See before/after rewrites</a>
+    </div>
+    <div class="hero-proof" data-reveal>
+      <span class="hero-proof-item"><strong>Medically trained</strong> writer</span>
+      <span class="divider"></span>
+      <span class="hero-proof-item">Specializes in <strong>FTC &amp; Meta compliance</strong></span>
+      <span class="divider"></span>
+      <span class="hero-proof-item">Supplements, longevity &amp; <strong>health brands only</strong></span>
+      <span class="divider"></span>
+      <span class="hero-proof-item">48-hour <strong>free audit</strong> on your funnel</span>
     </div>
   </div>
-  <div class="scroll-cue">Scroll</div>
 </section>
 
-<svg class="ecg" data-ecg viewBox="0 0 720 60" aria-hidden="true">
-  <path d="M0,30 L210,30 L228,30 L238,12 L250,48 L262,6 L274,42 L284,30 L300,30 L720,30"/>
-</svg>
-
-<!-- PROBLEM -->
+<!-- ═══════════════════════════════════════════════
+     PROBLEM
+════════════════════════════════════════════════ -->
 <section class="problem">
   <div class="shell">
-    <div class="eyebrow" data-reveal>The problem</div>
-    <h2 data-reveal>Every health brand is one sentence away from trouble.</h2>
-    <div class="split">
-      <div class="col" data-reveal>
-        <h3>The copy that converts gets you flagged.</h3>
-        <p>"Cures." "Reverses." "Clinically proven." The lines that move cold traffic are the same lines that burn ad accounts, invite FTC letters, and stall your scaling for weeks while review queues clear.</p>
+    <div class="label" data-reveal>Why your copy isn't converting</div>
+    <h2 data-reveal>Three problems that kill supplement funnels</h2>
+    <div class="pain-grid">
+      <div class="pain" data-reveal>
+        <span class="pain-num">01</span>
+        <h3>Your copywriter has never read a clinical trial</h3>
+        <p>They borrowed your claims from competitor landing pages and dressed them up. No mechanism. No evidence trail. <strong>Just vague benefit language that doesn't survive skeptical scrutiny.</strong> Cold traffic doesn't convert on "supports healthy energy."</p>
       </div>
-      <div class="col" data-reveal>
-        <h3>The copy that's safe gets ignored.</h3>
-        <p>So the lawyers sand it down to "supports overall wellness" — and now it offends no one and persuades no one. Your CAC climbs while your copy says nothing at all.</p>
+      <div class="pain" data-reveal>
+        <span class="pain-num">02</span>
+        <h3>Your compliance pass strips the persuasion</h3>
+        <p>Your lawyer replaces every specific claim with "may support" and "as part of a healthy lifestyle." <strong>The copy that survives review offends no one — and moves no one.</strong> Your CAC climbs while your page says functionally nothing.</p>
+      </div>
+      <div class="pain" data-reveal>
+        <span class="pain-num">03</span>
+        <h3>One sentence away from an ad account ban</h3>
+        <p>Meta's review algorithm flags implied disease claims, before/after structure, and certain mechanism language — often in ways a non-specialist copywriter can't predict. <strong>A single banned campaign can cost weeks of lost revenue</strong> while you wait in the appeals queue.</p>
       </div>
     </div>
-    <p class="thesis" data-reveal>There is a third way: copy written by someone who can <em>read the studies</em> — and knows exactly how far the evidence lets you go.</p>
+    <div class="problem-truth" data-reveal>
+      <p>The real problem: <em>no one you've hired has been both</em> medically literate enough to evaluate the evidence and trained enough in direct response to turn it into copy that sells.</p>
+    </div>
   </div>
 </section>
 
-<!-- SERVICES -->
-<section id="services">
+<!-- ═══════════════════════════════════════════════
+     SOLUTION
+════════════════════════════════════════════════ -->
+<section class="solution">
   <div class="shell">
-    <div class="eyebrow" data-reveal>Three ways to work together</div>
-    <div class="services-grid">
-      <div class="card tilt" data-reveal>
-        <span class="tag">01 / Email</span>
+    <div class="label" data-reveal>What makes this different</div>
+    <h2 data-reveal>The gap between "compliant" and "converts" is where I work</h2>
+    <p class="solution-lead" data-reveal>
+      I trained in medicine — reading actual clinical literature, understanding dosing, endpoints, and what the evidence can and cannot support. Then I trained in direct-response copywriting. <strong>That combination does not exist at a typical agency or freelance marketplace.</strong>
+    </p>
+    <div class="solution-grid">
+      <div class="sol-card" data-reveal>
+        <span class="sol-icon">The medical layer</span>
+        <h3>I read the primary literature before I write a word</h3>
+        <p>Every mechanism claim is traced to its source trial — dose, endpoint, population, effect size. I know exactly what "clinically studied" means and what it doesn't. <strong>You get copy that's specific because the evidence is specific,</strong> not because a copywriter made it sound that way.</p>
+      </div>
+      <div class="sol-card" data-reveal>
+        <span class="sol-icon">The direct-response layer</span>
+        <h3>I structure every page around one job: getting cold traffic to convert</h3>
+        <p>Mechanism-first copy — explaining <em>why</em> it works, not just claiming that it does — eliminates the comparison shopper. A buyer who understands the biology stops comparing you on price. <strong>That's not a branding play. It's a conversion strategy.</strong></p>
+      </div>
+      <div class="sol-card" data-reveal>
+        <span class="sol-icon">The compliance layer</span>
+        <h3>Built to survive Meta, TikTok, and FTC review without a rewrite</h3>
+        <p>Structure claims as mechanism explanations, not disease treatments. Avoid implied before/after in ad copy. <strong>Ship once — no lawyer-pass revision rounds stripping out what made the copy work.</strong> Scaling is a copy problem before it's a media problem.</p>
+      </div>
+      <div class="sol-card" data-reveal>
+        <span class="sol-icon">The specialist constraint</span>
+        <h3>Health and supplement brands only — nothing else</h3>
+        <p>I don't write SaaS copy or e-commerce fashion. <strong>This specialization means I already know your buyer's objections, the competitive claims in your category, and the regulatory lines specific to your product type.</strong> That saves time and produces better output.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PROOF
+════════════════════════════════════════════════ -->
+<section class="proof" id="proof">
+  <div class="shell">
+    <div class="label" data-reveal>Proof of method</div>
+    <h2 data-reveal>Before/after rewrites — same product, different approach</h2>
+    <div class="rewrites">
+
+      <div class="rewrite" data-reveal>
+        <div class="rewrite-header">
+          <span class="rewrite-product">NMN / NAD+ Supplement — Hero Headline</span>
+          <span class="rewrite-tag">Mechanism claim</span>
+        </div>
+        <div class="rewrite-body">
+          <div class="rw-pane before">
+            <span class="rw-label">What the category writes</span>
+            <p class="rw-copy">"Boost your energy and feel younger with clinically proven NMN."</p>
+          </div>
+          <div class="rw-pane after">
+            <span class="rw-label">LUMEN rewrite</span>
+            <p class="rw-copy">"Your cells have a recycling system. After 30, it slows. NMN is the only compound studied in humans to restart it."</p>
+            <p class="rw-note"><strong>Why it converts better:</strong> Names the mechanism (NAD+ salvage pathway), introduces age-related decline as the villain, positions the product as the specific solution — without claiming to "cure" anything. Passes FTC structure review.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rewrite" data-reveal>
+        <div class="rewrite-header">
+          <span class="rewrite-product">Magnesium Glycinate Stack — Email Subject Line</span>
+          <span class="rewrite-tag">Sleep / recovery angle</span>
+        </div>
+        <div class="rewrite-body">
+          <div class="rw-pane before">
+            <span class="rw-label">What the category writes</span>
+            <p class="rw-copy">"Support deep sleep and wake up refreshed with our magnesium blend."</p>
+          </div>
+          <div class="rw-pane after">
+            <span class="rw-label">LUMEN rewrite</span>
+            <p class="rw-copy">"Waking up at 3am isn't insomnia. It's your GABA receptors — and magnesium is the one mineral that binds them."</p>
+            <p class="rw-note"><strong>Why it converts better:</strong> Reframes the symptom as a mechanism (GABA binding), which neutralizes the "I've tried magnesium before" objection. Specific receptor-level language signals authority without requiring a disease claim.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rewrite" data-reveal>
+        <div class="rewrite-header">
+          <span class="rewrite-product">Testosterone Support Supplement — VSL Open</span>
+          <span class="rewrite-tag">High-risk claim category</span>
+        </div>
+        <div class="rewrite-body">
+          <div class="rw-pane before">
+            <span class="rw-label">What the category writes</span>
+            <p class="rw-copy">"Clinically proven to boost testosterone levels by up to 45% in just 12 weeks."</p>
+          </div>
+          <div class="rw-pane after">
+            <span class="rw-label">LUMEN rewrite</span>
+            <p class="rw-copy">"A 2021 trial in the Journal of the International Society of Sports Nutrition found men over 40 who took 300mg of ashwagandha daily saw measurably higher testosterone levels at 12 weeks versus placebo. Here's what that actually means for your training."</p>
+            <p class="rw-note"><strong>Why it converts better:</strong> Cites the real study (dose, population, timeframe, publication) instead of a vague "clinically proven" claim that invites FTC scrutiny. More specific = more credible to skeptical buyers. Ad-safe.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="proof-compliance" data-reveal>
+      <h3>Compliance audit breakdown — claims that kill ad accounts and why</h3>
+      <div class="audit-rows">
+        <div class="audit-row">
+          <span class="audit-claim">"Clinically proven to boost testosterone"</span>
+          <span class="audit-verdict verdict-flag">FTC Flag</span>
+          <span class="audit-why"><strong>"Clinically proven"</strong> requires substantiation on file. Vague "testosterone boost" without dose, population, and timeframe is an unsubstantiated structure/function claim.</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-claim">"Reverses cellular aging at the DNA level"</span>
+          <span class="audit-verdict verdict-flag">Meta Ban</span>
+          <span class="audit-why"><strong>"Reverses aging"</strong> implies treatment of a disease process. Meta's algorithm flags "aging" + "reverses" + implied mechanism as a prohibited health claim regardless of supplement status.</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-claim">"Studied in a 2020 human trial at 300mg/day"</span>
+          <span class="audit-verdict verdict-pass">Compliant</span>
+          <span class="audit-why"><strong>Specific citation with dose and study design</strong> is substantiatable, passes FTC structure/function rules, and does not imply disease treatment.</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-claim">"Supports healthy cortisol levels already in normal range"</span>
+          <span class="audit-verdict verdict-pass">Compliant</span>
+          <span class="audit-why"><strong>"Already in normal range"</strong> qualifier is FTC-recommended language for structure/function claims. Avoids implied disease treatment (cortisol disorders) while remaining persuasive.</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-claim">"Feel like you're 30 again"</span>
+          <span class="audit-verdict verdict-rewrite">Rewrite</span>
+          <span class="audit-why"><strong>Before/after age framing</strong> is a grey zone on Meta. Borderline-safe in body copy, high-risk in ad creative or subject lines. Reframe as mechanism or outcome specificity.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     OFFER
+════════════════════════════════════════════════ -->
+<section class="offer" id="services">
+  <div class="shell">
+    <div class="label" data-reveal>Exactly what you get</div>
+    <h2 data-reveal>Three ways to work together</h2>
+    <p class="offer-lead" data-reveal>All work is delivered with a compliance annotation — every claim marked with its evidence source and the FTC/Meta rule it satisfies. No guessing whether it will pass review.</p>
+    <div class="offer-grid">
+      <div class="offer-card" data-reveal>
+        <span class="offer-num">01 / Email</span>
         <h3>The Flow</h3>
-        <p class="desc">Welcome, cart, and post-purchase sequences that turn first orders into subscriptions.</p>
-        <ul>
-          <li>5–7 email sequence, mechanism-first</li>
-          <li>Subject-line variants for testing</li>
-          <li>Claims-checked against your evidence</li>
+        <p class="tagline">Welcome, cart-abandon, and post-purchase sequences that convert first orders into subscriptions.</p>
+        <ul class="offer-deliverables">
+          <li>5–7 email sequence, mechanism-first structure</li>
+          <li>Subject line A/B variants for each email</li>
+          <li>Compliance annotation on every claim</li>
+          <li>Delivered in 7 business days</li>
         </ul>
-        <p class="from">From <strong>$500</strong></p>
+        <div class="offer-price">
+          <span class="price-amount">$500</span>
+          <span class="price-note">flat rate</span>
+        </div>
+        <span class="offer-timeline">7-day turnaround</span>
       </div>
-      <div class="card tilt" data-reveal>
-        <span class="tag">02 / Pages</span>
+      <div class="offer-card featured" data-reveal>
+        <span class="offer-num">02 / Pages</span>
         <h3>The Engine</h3>
-        <p class="desc">Sales pages and VSL scripts built to carry cold traffic from doubt to checkout.</p>
-        <ul>
-          <li>Full long-form page or VSL script</li>
-          <li>Research dossier on your buyer's objections</li>
-          <li>Compliance pass on every claim</li>
+        <p class="tagline">Full sales page or VSL script built to carry cold, skeptical traffic from awareness to checkout.</p>
+        <ul class="offer-deliverables">
+          <li>Full long-form page or VSL script (3,000–6,000 words)</li>
+          <li>Buyer research dossier on your category's objections</li>
+          <li>Headline swipe file (10+ tested angles)</li>
+          <li>Compliance annotation + FTC/Meta review pass</li>
+          <li>One revision round included</li>
         </ul>
-        <p class="from">From <strong>$1,000</strong></p>
+        <div class="offer-price">
+          <span class="price-amount">$1,000</span>
+          <span class="price-note">starting</span>
+        </div>
+        <span class="offer-timeline">10–14 day turnaround</span>
       </div>
-      <div class="card tilt" data-reveal>
-        <span class="tag">03 / Retainer</span>
+      <div class="offer-card" data-reveal>
+        <span class="offer-num">03 / Retainer</span>
         <h3>The Standing Retainer</h3>
-        <p class="desc">A copy chief on call — monthly assets, testing roadmap, and a second brain on strategy.</p>
-        <ul>
-          <li>Monthly asset production</li>
-          <li>Ad-angle and offer consulting</li>
-          <li>Priority turnaround</li>
+        <p class="tagline">A copy chief on call — monthly asset production, testing roadmap, compliance on new claims.</p>
+        <ul class="offer-deliverables">
+          <li>Monthly assets (pages, emails, ad angles)</li>
+          <li>Ad-claim review before launch</li>
+          <li>Offer and angle consulting</li>
+          <li>Priority 48-hour turnaround on urgent requests</li>
         </ul>
-        <p class="from"><strong>$1,300</strong> / month</p>
+        <div class="offer-price">
+          <span class="price-amount">$1,300</span>
+          <span class="price-note">/ month</span>
+        </div>
+        <span class="offer-timeline">Rolling monthly</span>
       </div>
     </div>
-    <p class="audit-line" data-reveal>Not ready for a full build? Start with the <a href="#contact">Compliance &amp; Conversion Audit</a> — your funnel, marked up line by line, in 48 hours.</p>
-  </div>
-</section>
-
-<svg class="ecg" data-ecg viewBox="0 0 720 60" aria-hidden="true">
-  <path d="M0,30 L210,30 L228,30 L238,12 L250,48 L262,6 L274,42 L284,30 L300,30 L720,30"/>
-</svg>
-
-<!-- EDGE -->
-<section class="edge">
-  <div class="shell">
-    <div class="eyebrow" style="justify-content:center" data-reveal>The edge</div>
-    <p class="quote" data-parallax data-reveal>The difference between <em>"clinically&nbsp;proven"</em> and <em>"clinically&nbsp;studied"</em> is a lawsuit.</p>
-    <p class="body-copy" data-reveal>Most copywriters borrow your science secondhand. LUMEN reads the primary literature — the actual trials, doses, and endpoints — and writes mechanism-first copy that makes skeptical buyers lean in.</p>
-    <p class="body-copy" data-reveal>That is the whole edge: persuasion built on what the evidence actually says. It converts harder <em>because</em> it holds up.</p>
-  </div>
-</section>
-
-<!-- PROOF -->
-<section>
-  <div class="shell">
-    <div class="eyebrow" data-reveal>Proof, on the page</div>
-    <div class="proof-frame" data-reveal>
-      <div class="compare">
-        <div class="pane pane-before">
-          <span class="label">What the category writes</span>
-          <p class="line">"Supports healthy energy levels and overall wellness."</p>
-        </div>
-        <div class="pane pane-after">
-          <span class="label">What LUMEN writes</span>
-          <p class="line">"Your cells have a recycling system. After thirty, it slows. This is the only compound studied in humans to restart it."</p>
-        </div>
+    <div class="audit-callout" data-reveal>
+      <div class="audit-callout-text">
+        <h3>Not ready to commit? Start with the Compliance &amp; Conversion Audit — $250.</h3>
+        <p>Your existing funnel, marked up line by line in 48 hours. Every weak claim flagged, every conversion leak named, <strong>every rewrite suggested with the evidence that supports it.</strong> Most brands find $5k–$20k in recoverable revenue in the first audit.</p>
       </div>
-    </div>
-    <div class="standards">
-      <div class="standard" data-reveal><span class="n">i.</span><p>Every claim is traced to its source before it ships. If the evidence can't carry the sentence, the sentence changes.</p></div>
-      <div class="standard" data-reveal><span class="n">ii.</span><p>Mechanism first. A buyer who understands <em>why</em> it works stops comparing you on price.</p></div>
-      <div class="standard" data-reveal><span class="n">iii.</span><p>Written to survive review — Meta, TikTok, FTC. Scaling is a copy problem before it's a media problem.</p></div>
+      <a class="btn-primary" href="mailto:mohammedwessam306@gmail.com?subject=LUMEN%20—%20Compliance%20Audit%20Request">
+        Request the audit <span class="arrow">→</span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- WORK -->
-<section id="work">
+<!-- ═══════════════════════════════════════════════
+     FINAL CTA
+════════════════════════════════════════════════ -->
+<section class="final-cta" id="contact">
   <div class="shell">
-    <div class="eyebrow" data-reveal>Selected work</div>
-    <div class="work-grid">
-      <a class="work w1" href="#contact" data-reveal>
-        <div class="bg"></div>
-        <div class="meta"><span class="name">FORGE</span><span class="kind">Testosterone VSL — concept build</span></div>
+    <div class="label" style="justify-content:center" data-reveal>Start here</div>
+    <h2 data-reveal>Tell me the product. I'll tell you <em>exactly</em> what the copy is getting wrong.</h2>
+    <p class="sub" data-reveal>
+      Send me your current funnel — landing page, email sequence, ad creative, whatever you have.
+      <strong>I'll send back a specific breakdown in 24 hours, free.</strong>
+      No sales call required first.
+    </p>
+    <div class="cta-box" data-reveal>
+      <a class="btn-primary" href="mailto:mohammedwessam306@gmail.com?subject=LUMEN%20—%20Funnel%20Review%20Request&body=Hi%2C%0A%0AHere%20is%20my%20current%20funnel%20URL%2Fcopy%3A%0A%0AProduct%3A%0AMain%20bottleneck%3A">
+        Email me your funnel now <span class="arrow">→</span>
       </a>
-      <a class="work w2" href="#contact" data-reveal>
-        <div class="bg"></div>
-        <div class="meta"><span class="name">CLARITY</span><span class="kind">Nootropic sales page — concept build</span></div>
-      </a>
-      <a class="work w3" href="#contact" data-reveal>
-        <div class="bg"></div>
-        <div class="meta"><span class="name">DRIFT</span><span class="kind">Cart-recovery flow — concept build</span></div>
-      </a>
-      <a class="work w4" href="#contact" data-reveal>
-        <div class="bg"></div>
-        <div class="meta"><span class="name">SIGNAL</span><span class="kind">NMN ad set — concept build</span></div>
-      </a>
-    </div>
-    <p class="work-note" data-reveal>Concept builds, written to client-grade spec. Client work joins this wall as it ships.</p>
-  </div>
-</section>
-
-<!-- FOUNDER -->
-<section class="founder">
-  <div class="shell">
-    <p class="line" data-reveal>Written by a <strong>medically trained</strong> mind.</p>
-    <p class="sub" data-reveal>One writer. No hand-offs. No juniors.</p>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="shell">
-    <div class="eyebrow" style="justify-content:center" data-reveal>Start a project</div>
-    <h2 data-reveal>Say the thing only <em>you</em> can claim.</h2>
-    <p class="body-copy" data-reveal>Tell me the product and the bottleneck. You'll get a straight answer on whether copy is the lever — and what I'd test first.</p>
-    <div data-reveal>
-      <a class="btn magnetic" href="mailto:mohammedwessam306@gmail.com?subject=LUMEN%20—%20Project%20inquiry">Start a project <span class="arrow">→</span></a>
-      <a class="contact-email" href="mailto:mohammedwessam306@gmail.com">mohammedwessam306@gmail.com</a>
+      <span class="cta-disclaimer">
+        Or reach me directly: <a href="mailto:mohammedwessam306@gmail.com">mohammedwessam306@gmail.com</a>
+      </span>
     </div>
   </div>
 </section>
 
 <footer>
   <span>LUMEN © 2026</span>
-  <span>Health copy, written responsibly.</span>
+  <span>Health &amp; supplement copy — written responsibly.</span>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.14/lenis.min.js"></script>
 <script>
 (function(){
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
 
   /* smooth scroll */
   if(!reduced && typeof Lenis !== 'undefined'){
-    const lenis = new Lenis({duration:1.25,easing:t=>1-Math.pow(1-t,4)});
-    function raf(t){lenis.raf(t);requestAnimationFrame(raf)}
+    const lenis = new Lenis({duration:1.15, easing:t=>1-Math.pow(1-t,4)});
+    function raf(t){lenis.raf(t); requestAnimationFrame(raf)}
     requestAnimationFrame(raf);
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click',e=>{
-        const id=a.getAttribute('href');
-        if(id.length>1){e.preventDefault();lenis.scrollTo(id,{offset:0})}
+        const id = a.getAttribute('href');
+        if(id.length > 1){e.preventDefault(); lenis.scrollTo(id, {offset:-80})}
       });
     });
-  }
-
-  /* hero word-by-word */
-  const h=document.getElementById('heroline');
-  if(h){
-    const walk=(node)=>{
-      [...node.childNodes].forEach(n=>{
-        if(n.nodeType===3){
-          const frag=document.createDocumentFragment();
-          n.textContent.split(/(\s+)/).forEach(part=>{
-            if(/^\s+$/.test(part)||part===''){frag.appendChild(document.createTextNode(part));return}
-            const w=document.createElement('span');w.className='w';
-            const inner=document.createElement('span');inner.textContent=part;
-            w.appendChild(inner);frag.appendChild(w);
-          });
-          node.replaceChild(frag,n);
-        } else if(n.nodeType===1){walk(n)}
-      });
-    };
-    walk(h);
-    const spans=h.querySelectorAll('.w span');
-    spans.forEach((s,i)=>s.style.transitionDelay=(0.15+i*0.085)+'s');
-    requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelector('.hero').classList.add('loaded')));
   }
 
   /* reveals */
-  const io=new IntersectionObserver(es=>{
-    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
-  },{threshold:.18});
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.12, rootMargin:'0px 0px -40px 0px'});
+
   document.querySelectorAll('[data-reveal]').forEach((el,i)=>{
-    el.style.transitionDelay=((i%4)*0.08)+'s';
+    const group = Math.floor(i / 3);
+    el.style.transitionDelay = ((i % 3) * 0.09) + 's';
     io.observe(el);
   });
-  document.querySelectorAll('[data-ecg]').forEach(el=>io.observe(el));
 
-  /* cursor */
-  if(fine && !reduced){
-    const dot=document.querySelector('.cursor-dot'),ring=document.querySelector('.cursor-ring');
-    let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
-    addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`});
-    (function loop(){
-      rx+=(mx-rx)*.14;ry+=(my-ry)*.14;
-      ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-      requestAnimationFrame(loop);
-    })();
-    document.querySelectorAll('a,.card,.work').forEach(el=>{
-      el.addEventListener('mouseenter',()=>ring.classList.add('is-active'));
-      el.addEventListener('mouseleave',()=>ring.classList.remove('is-active'));
-    });
-  }
+  /* nav scroll state */
+  const nav = document.querySelector('nav');
+  addEventListener('scroll',()=>{
+    nav.style.borderBottomColor = scrollY > 40
+      ? 'rgba(232,226,214,.12)'
+      : 'rgba(232,226,214,.06)';
+  },{passive:true});
 
-  /* magnetic buttons */
-  if(fine && !reduced){
-    document.querySelectorAll('.magnetic').forEach(btn=>{
-      btn.addEventListener('mousemove',e=>{
-        const r=btn.getBoundingClientRect();
-        const x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2;
-        btn.style.transform=`translate(${x*.22}px,${y*.32}px)`;
-      });
-      btn.addEventListener('mouseleave',()=>{
-        btn.style.transition='transform .6s cubic-bezier(.22,1,.36,1)';
-        btn.style.transform='translate(0,0)';
-        setTimeout(()=>btn.style.transition='',600);
-      });
-    });
-  }
-
-  /* card tilt */
-  if(fine && !reduced){
-    document.querySelectorAll('.tilt').forEach(card=>{
-      card.addEventListener('mousemove',e=>{
-        const r=card.getBoundingClientRect();
-        const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
-        card.style.transform=`perspective(900px) rotateX(${-y*5}deg) rotateY(${x*6}deg) translateY(-4px)`;
-      });
-      card.addEventListener('mouseleave',()=>{
-        card.style.transition='transform .7s cubic-bezier(.22,1,.36,1)';
-        card.style.transform='';
-        setTimeout(()=>card.style.transition='',700);
-      });
-    });
-  }
-
-  /* quote drift */
-  const par=document.querySelector('[data-parallax]');
-  if(par && !reduced){
-    addEventListener('scroll',()=>{
-      const r=par.getBoundingClientRect();
-      const p=(r.top+r.height/2-innerHeight/2)/innerHeight;
-      par.style.transform=`translateY(${p*-34}px)`;
-    },{passive:true});
-  }
-
-  /* ---------- 3D helix ---------- */
-  const canvas=document.getElementById('helix');
-  if(canvas && typeof THREE!=='undefined'){
-    const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
-    renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
-    const scene=new THREE.Scene();
-    scene.fog=new THREE.Fog(0x0e0e0e,9,22);
-    const cam=new THREE.PerspectiveCamera(38,1,0.1,100);
-    cam.position.set(0,0,13);
-
-    const group=new THREE.Group();
-    scene.add(group);
-
-    const mobile=innerWidth<880;
-    const TURNS=4.6, PTS=mobile?420:760, RADIUS=2.35, HEIGHT=11;
-    const bone=new THREE.Color(0xE8E2D6), ox=new THREE.Color(0xA03A3A);
-
-    function strand(phase){
-      const pos=new Float32Array(PTS*3), col=new Float32Array(PTS*3);
-      for(let i=0;i<PTS;i++){
-        const t=i/(PTS-1);
-        const a=t*Math.PI*2*TURNS+phase;
-        pos[i*3]=Math.cos(a)*RADIUS;
-        pos[i*3+1]=(t-.5)*HEIGHT;
-        pos[i*3+2]=Math.sin(a)*RADIUS;
-        const c=bone.clone().lerp(ox,Math.abs(Math.sin(a*0.5))*.35);
-        col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
-      }
-      const g=new THREE.BufferGeometry();
-      g.setAttribute('position',new THREE.BufferAttribute(pos,3));
-      g.setAttribute('color',new THREE.BufferAttribute(col,3));
-      const m=new THREE.PointsMaterial({size:mobile?0.045:0.05,vertexColors:true,transparent:true,opacity:.9,depthWrite:false});
-      return new THREE.Points(g,m);
-    }
-    group.add(strand(0));
-    group.add(strand(Math.PI));
-
-    /* rungs */
-    const RUNGS=mobile?26:46;
-    const rpos=new Float32Array(RUNGS*2*3);
-    for(let i=0;i<RUNGS;i++){
-      const t=i/(RUNGS-1), a=t*Math.PI*2*TURNS;
-      rpos[i*6]=Math.cos(a)*RADIUS; rpos[i*6+1]=(t-.5)*HEIGHT; rpos[i*6+2]=Math.sin(a)*RADIUS;
-      rpos[i*6+3]=Math.cos(a+Math.PI)*RADIUS; rpos[i*6+4]=(t-.5)*HEIGHT; rpos[i*6+5]=Math.sin(a+Math.PI)*RADIUS;
-    }
-    const rg=new THREE.BufferGeometry();
-    rg.setAttribute('position',new THREE.BufferAttribute(rpos,3));
-    group.add(new THREE.LineSegments(rg,new THREE.LineBasicMaterial({color:0x7A2E2E,transparent:true,opacity:.34})));
-
-    /* ambient dust */
-    const DUST=mobile?160:320;
-    const dpos=new Float32Array(DUST*3);
-    for(let i=0;i<DUST;i++){
-      dpos[i*3]=(Math.random()-.5)*22;
-      dpos[i*3+1]=(Math.random()-.5)*14;
-      dpos[i*3+2]=(Math.random()-.5)*10-2;
-    }
-    const dg=new THREE.BufferGeometry();
-    dg.setAttribute('position',new THREE.BufferAttribute(dpos,3));
-    scene.add(new THREE.Points(dg,new THREE.PointsMaterial({color:0xE8E2D6,size:0.022,transparent:true,opacity:.35,depthWrite:false})));
-
-    group.rotation.z=0.32;
-
-    let tx=0,ty=0,cx=0,cy=0;
-    addEventListener('mousemove',e=>{
-      tx=(e.clientX/innerWidth-.5);
-      ty=(e.clientY/innerHeight-.5);
-    },{passive:true});
-
-    function size(){
-      const hero=document.querySelector('.hero');
-      const w=hero.offsetWidth,h2=hero.offsetHeight;
-      renderer.setSize(w,h2,false);
-      cam.aspect=w/h2;cam.updateProjectionMatrix();
-    }
-    size();addEventListener('resize',size);
-
-    let visible=true;
-    new IntersectionObserver(es=>{visible=es[0].isIntersecting},{threshold:0}).observe(canvas);
-
-    const clock=new THREE.Clock();
-    (function tick(){
-      requestAnimationFrame(tick);
-      if(!visible)return;
-      const t=clock.getElapsedTime();
-      if(!reduced){
-        group.rotation.y=t*0.12;
-        group.position.y=Math.sin(t*0.4)*0.18;
-        cx+=(tx-cx)*.04; cy+=(ty-cy)*.04;
-        group.rotation.x=cy*0.25;
-        cam.position.x=cx*1.1;
-        cam.lookAt(0,0,0);
-      }
-      renderer.render(scene,cam);
-    })();
-  }
 })();
 </script>
 </body>
